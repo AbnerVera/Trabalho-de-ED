@@ -8,14 +8,13 @@
 using namespace std;
 using namespace std::chrono;
 
-void menu(int);
+void menu();
 
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
 
-    int iOpcao = 0;
-    menu(iOpcao);
+    menu();
 
     return 0;
 }
@@ -34,11 +33,13 @@ void printMenu()
             "08. Verificar se a árvore é completa\n"
             "09. Verificar se a árvore é perfeita\n"
             "10. Exibir a árvore utilizando (BFS)\n"
-            "11. Converter a árvore em uma lista e ordenar com Bubble Sort\n"
-            "12. Converter a árvore em uma lista e ordenar com Selection Sort\n"
-            "13. Converter a árvore em uma lista e ordenar com Insertion Sort\n"
-            "14. Converter a árvore em uma lista e ordenar com Shell Sort" << endl;
-    cout << "Digite: ";
+            "11. Exibir a árvore PreOrder\n"
+            "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n"
+            "13. Converter a árvore em uma lista e ordenar com Selection Sort\n"
+            "14. Converter a árvore em uma lista e ordenar com Insertion Sort\n"
+            "15. Converter a árvore em uma lista e ordenar com Shell Sort\n"
+            "-1. Sair" << endl;
+    cout << "\nDigite sua opção: ";
 }
 
 struct Node* teste(struct Node* ptrRoot)
@@ -62,35 +63,45 @@ void tempo(std::chrono::_V2::system_clock::time_point timeStart)
     auto timeDurationNano = duration_cast<nanoseconds>(timeStop - timeStart);
     auto timeDurationSegundo = duration_cast<seconds>(timeStop - timeStart);
 
-    if(timeDurationSegundo.count() <= 0) cout << "\nTempo utilizado: " << timeDurationNano.count() << " nanosegundos" << endl;
-    else cout << "\nTempo utilizado: " << timeDurationSegundo.count() << " segundos" << endl;
+    if(timeDurationSegundo.count() <= 0) cout << "\n\nTempo da operação: " << timeDurationNano.count() << " nanosegundos" << endl;
+    else cout << "\n\nTempo da operação: " << timeDurationSegundo.count() << " segundos" << endl;
 }
 
-void menu(int iOpcao) {
+void menu() {
 
-    int iOpcaos = iOpcao;
+    int iOpcao;
     struct Node* root = nullptr;
     int iValor;
+    string sEndereco;
     auto timeStart = high_resolution_clock::now();
 
-    while (iOpcaos != -1){
+    while (iOpcao != -1){
 
         system("cls");
 
         printMenu();
-        cin >> iOpcaos;
+        cin >> iOpcao;
+
+        system("cls");
 
         timeStart = high_resolution_clock::now();
 
-        switch (iOpcaos) {
+        switch (iOpcao) {
             case 1:
                 cout << "01. Construir uma árvore binária de busca a partir de um arquivo texto\n" << endl;
-                //root = arvoreTexto();
+                cout << "Digite o nome do arquivo: ";
+                cin >> sEndereco;
+
+                root = arvoreTexto(root, sEndereco);
                 break;
 
             case 2:
-                cout << "02. Construir uma árvore binária de busca a partir de dados digitados pelo usuário\n" << endl;
-                //root = arvoreUsuario();
+                cout << "02. Construir uma árvore binária de busca a partir de dados digitados\n" << endl;
+                cout << "Digite o numero de elementos: ";
+                cin >> iValor;
+                cout << "\n<< ";
+
+                root = arvoreDigitado(root, iValor);
                 break;
 
             case 3:
@@ -105,7 +116,7 @@ void menu(int iOpcao) {
 
             case 5:
                 cout << "05. Inserir um elemento\n" << endl;
-                cout << "Digite um elemento: ";
+                cout << "Digite o elemento: ";
                 cin >> iValor;
 
                 root = insertNode(root, iValor);
@@ -114,10 +125,20 @@ void menu(int iOpcao) {
 
             case 6:
                 cout << "06. Remover um elemento\n" << endl;
+                cout << "Digite o elemento para remoção: ";
+                cin >> iValor;
+
+                deleteNode(root, iValor);
+
                 break;
 
             case 7:
                 cout << "07. Buscar o endereço de memória de um elemento\n" << endl;
+                cout << "Digite o elemento: ";
+                cin >> iValor;
+
+                //cout << "Endereço de " << iValor  << ": " << searchNode(root, iValor);
+
                 break;
 
             case 8:
@@ -133,19 +154,26 @@ void menu(int iOpcao) {
                 break;
 
             case 11:
-                cout << "11. Converter a árvore em uma lista e ordenar com Bubble Sort\n" << endl;
+                cout << "11. Exibir a árvore PreOrder\n" << endl;
+
+                traversePreOrder(root);
+
                 break;
 
             case 12:
-                cout << "12. Converter a árvore em uma lista e ordenar com Selection Sort\n" << endl;
+                cout << "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n" << endl;
                 break;
 
             case 13:
-                cout << "13. Converter a árvore em uma lista e ordenar com Insertion Sort\n" << endl;
+                cout << "13. Converter a árvore em uma lista e ordenar com Selection Sort\n" << endl;
                 break;
 
             case 14:
-                cout << "14. Converter a árvore em uma lista e ordenar com Shell Sort\n" << endl;
+                cout << "14. Converter a árvore em uma lista e ordenar com Insertion Sort\n" << endl;
+                break;
+
+            case 15:
+                cout << "15. Converter a árvore em uma lista e ordenar com Shell Sort\n" << endl;
 
             case -1:
                 cout << "Tchau!" << endl;
@@ -156,7 +184,10 @@ void menu(int iOpcao) {
                 break;
         }
 
-        tempo(timeStart);
-        system("pause");
+        if(iOpcao != -1)
+        {
+            tempo(timeStart);
+            system("pause");
+        }
     }
 }

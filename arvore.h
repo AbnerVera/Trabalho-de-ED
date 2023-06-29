@@ -2,6 +2,7 @@
 #define TRABALHO_DE_ED_ARVORE_H
 
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -14,8 +15,8 @@ struct Node
 
 struct Node* newNode(int iData);
 
-struct Node* arvoreTexto(string sEndereco);
-struct Node* arvoreDigitado(int iTamanho);
+struct Node* arvoreTexto(struct Node* root, string sEndereco);
+struct Node* arvoreDigitado(struct Node* root, int iTamanho);
 
 void traversePreOrder(struct Node*);
 void traverseInOrder(struct Node* );
@@ -72,9 +73,35 @@ void traversePosOrder(struct Node* ptrStartingNode)
 }
 
 
-struct Node* arvoreTexto(string sEndereco)
+struct Node* arvoreTexto(struct Node* root, string sEndereco)
 {
-    struct Node* root = nullptr;
+    FILE *arq;
+    
+    arq = fopen(sEndereco.c_str(), "rt");
+
+    if (arq == nullptr)
+    {
+        cout << "Erro ao encontrar o arquivo";
+        return nullptr;
+    }
+
+    char Linha[100];
+    char *result;
+    int iValor;
+
+    for(int i = 1; !feof(arq); i++)
+    {
+        // Lê uma linha (inclusive com o '\n')
+        result = fgets(Linha, 100, arq);  // o 'fgets' lê até 99 caracteres ou até o '\n'
+        if (result)  // Se foi possível ler
+        {
+            sscanf(Linha, "%d", &iValor);
+            root = insertNode(root, iValor);
+        }
+    }
+
+    fclose(arq);
+
     return root;
 }
 
