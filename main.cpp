@@ -71,6 +71,7 @@ void menu() {
 
     int iOpcao;
     struct Node* root = nullptr;
+    struct Node* ptrTemp = nullptr;
     int iValor;
     string sEndereco;
     auto timeStart = high_resolution_clock::now();
@@ -137,7 +138,10 @@ void menu() {
                 cout << "Digite o elemento: ";
                 cin >> iValor;
 
-                //cout << "Endereço de " << iValor  << ": " << searchNode(root, iValor);
+                ptrTemp =  searchNode(root, iValor);
+
+                if (ptrTemp != nullptr) cout << "Endereço de " << iValor  << ": " << ptrTemp;
+                else cout << "Elemento não encontrado";
 
                 break;
 

@@ -178,6 +178,27 @@ struct Node* deleteNode(struct Node* node, int iData)
     }
 }
 
+struct Node* searchNode(struct Node* node, int iData)
+{
+    if(node == nullptr)
+    {
+        return nullptr;
+    }
+
+    if(iData == node->iPayload)
+    {
+        return node;
+    }
+    else if(iData < node->iPayload)
+    {
+        return searchNode(node->ptrLeft, iData);
+    }
+    else
+    {
+        return searchNode(node->ptrRight, iData);
+    }
+    return node;
+}
 
 /**
  * Descobre a altura da árvore.
