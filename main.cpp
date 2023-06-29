@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <locale.h>
 #include "arvore.h"
-
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 void menu(int);
 
@@ -52,12 +53,17 @@ struct Node* teste(struct Node* ptrRoot)
     traversePreOrder(root);
     cout << endl;
 
-
-    cout << alturaArvore(root) << endl;
-
-    cout << "Tamanho arvore: " << tamanhoArvore(root) << endl;
-
     return  root;
+}
+
+void tempo(std::chrono::_V2::system_clock::time_point timeStart)
+{
+    auto timeStop = high_resolution_clock::now();
+    auto timeDurationNano = duration_cast<nanoseconds>(timeStop - timeStart);
+    auto timeDurationSegundo = duration_cast<seconds>(timeStop - timeStart);
+
+    if(timeDurationSegundo.count() <= 0) cout << "\nTempo utilizado: " << timeDurationNano.count() << " nanosegundos" << endl;
+    else cout << "\nTempo utilizado: " << timeDurationSegundo.count() << " segundos" << endl;
 }
 
 void menu(int iOpcao) {
@@ -65,6 +71,7 @@ void menu(int iOpcao) {
     int iOpcaos = iOpcao;
     struct Node* root = nullptr;
     int iValor;
+    auto timeStart = high_resolution_clock::now();
 
     while (iOpcaos != -1){
 
@@ -72,6 +79,8 @@ void menu(int iOpcao) {
 
         printMenu();
         cin >> iOpcaos;
+
+        timeStart = high_resolution_clock::now();
 
         switch (iOpcaos) {
             case 1:
@@ -99,7 +108,8 @@ void menu(int iOpcao) {
                 cout << "Digite um elemento: ";
                 cin >> iValor;
 
-                insertNode(root, iValor);
+                root = insertNode(root, iValor);
+
                 break;
 
             case 6:
@@ -144,7 +154,9 @@ void menu(int iOpcao) {
             default:
                 root = teste(root);
                 break;
-
         }
+
+        tempo(timeStart);
+        system("pause");
     }
 }
