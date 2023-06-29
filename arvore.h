@@ -14,12 +14,16 @@ struct Node
 
 struct Node* newNode(int iData);
 
+struct Node* arvoreTexto(string sEndereco);
+struct Node* arvoreDigitado(int iTamanho);
+
 void traversePreOrder(struct Node*);
 void traverseInOrder(struct Node* );
 void traversePosOrder(struct Node*);
 
 int alturaArvore(struct Node* , int iAltura = 0);
 int tamanhoArvore(struct Node* root,  int iTamanho = 0);
+
 struct Node* insertNode(struct Node* node, int iData);
 struct Node* deleteNode(struct Node* node, int iData);
 struct Node* searchNode(struct Node* node, int iData);
@@ -66,6 +70,26 @@ void traversePosOrder(struct Node* ptrStartingNode)
         cout << " " << ptrStartingNode->iPayload;
     }
 }
+
+
+struct Node* arvoreTexto(string sEndereco)
+{
+    struct Node* root = nullptr;
+    return root;
+}
+
+
+struct Node* arvoreDigitado(struct Node* root, int iTamanho)
+{
+    for(int i = 0; i < iTamanho; i++)
+    {
+        int iValor;
+        cin >> iValor;
+        root = insertNode(root, iValor);
+    }
+    return root;
+}
+
 
 struct Node* insertNode(struct Node* node, int iData)
 {
