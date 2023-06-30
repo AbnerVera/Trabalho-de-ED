@@ -181,6 +181,8 @@ void menu() {
 
             case 12:
                 cout << "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n" << endl;
+                treeToLinkedList(root);
+
                 break;
 
             case 13:

@@ -19,15 +19,16 @@ struct Node* treeFromText(struct Node* root, string strPath);
 struct Node* treeFromPrompt(struct Node* root, int iSize);
 
 void traversePreOrder(struct Node*);
-void traverseInOrder(struct Node* );
+void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
+void treeToLinkedList(struct Node*);
 
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
 
-struct Node* insertNode(struct Node* node, int iData);
-struct Node* deleteNode(struct Node* node, int iData);
-struct Node* searchNode(struct Node* node, int iData);
+struct Node* insertNode(struct Node* sNode, int iData);
+struct Node* deleteNode(struct Node* sNode, int iData);
+struct Node* searchNode(struct Node* sNode, int iData);
 
 
 struct Node* newNode(int iData)
@@ -64,7 +65,6 @@ void traverseInOrder(struct Node* ptrStartingNode)
         traverseInOrder(ptrStartingNode -> ptrRight);
     }
 }
-
 
 void traversePosOrder(struct Node* ptrStartingNode)
 {
@@ -272,5 +272,30 @@ int treeSize(struct Node* root, int iSize)
         return 0;
     } 
 }
+
+void treeToLinkedList(struct Node* root)
+{
+    while (root != nullptr) 
+    {
+        if (root -> ptrLeft != nullptr) 
+        {
+            struct Node* ptrCurrent = root -> ptrLeft;
+            
+            while (ptrCurrent -> ptrRight) 
+            {
+                ptrCurrent = ptrCurrent -> ptrRight;
+            }
+
+            ptrCurrent -> ptrRight = root -> ptrRight;
+
+            root -> ptrRight = root -> ptrLeft;
+            root -> ptrLeft = nullptr;
+        }
+        
+        root = root -> ptrRight;
+    }
+}
+
+
 
 #endif //TRABALHO_DE_ED_ARVORE_H
