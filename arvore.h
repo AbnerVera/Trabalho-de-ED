@@ -676,8 +676,11 @@ void deleteLinkedList(struct Node** sNode)
  
    while (ptrCurrent != nullptr)
    {
+       // salva o próximo nó
        sNext = ptrCurrent -> ptrRight;
+       // deleta o nó atual
        free(ptrCurrent);
+       // vai para o próximo nó
        ptrCurrent = sNext;
    }
 
