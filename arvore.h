@@ -647,18 +647,22 @@ void shellSort(struct Node* sNode)
 {
     int iLength = lengthLinkedList(sNode);
     
+    // ordenação começa com um grande intervalo e vai diminuindo
     for (int iGap = iLength / 2; iGap > 0; iGap /= 2) 
     {
         for (int iOuterLoop = iGap; iOuterLoop < iLength; iOuterLoop++) 
         {
+            // salva o valor do nó atual
             int iTemp = getNodeAtIndex(sNode, iOuterLoop) -> iPayload;
             int iInnerLoop;
             
+            // move os elementos da lista que são maiores que o valor salvo para frente no intervalo dado
             for (iInnerLoop = iOuterLoop; iInnerLoop >= iGap and getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload > iTemp; iInnerLoop -= iGap) 
             {
                 getNodeAtIndex(sNode, iInnerLoop) -> iPayload = getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload;
             }
 
+            // valor salvo na posição correta dentro do intervalo
             getNodeAtIndex(sNode, iInnerLoop) -> iPayload = iTemp;
         }
     }
