@@ -296,6 +296,52 @@ void treeToLinkedList(struct Node* root)
     }
 }
 
+struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2) 
+{
+  struct Node* sNodeTemp = sNode2 -> ptrRight;
+
+  sNode2 -> ptrRight = sNode1;
+  sNode1 -> ptrRight = sNodeTemp;
+
+  return sNode2;
+}
+
+void bubbleSortList(struct Node** sNode)
+{   
+    struct Node** sNodeTemp = sNode;
+    int iLength = 0;
+    
+    while (*sNodeTemp != nullptr)
+    {
+        iLength = iLength + 1;
+        sNodeTemp = &(*sNodeTemp) -> ptrRight;
+    }
+    
+    for (int iOuterLoop = 0; iOuterLoop <= iLength; iOuterLoop++) 
+    {
+        sNodeTemp = sNode;
+        bool bSwap = false;
+    
+        for (int iInnerLoop = 0; iInnerLoop < iLength - iOuterLoop - 1; iInnerLoop++)
+        {
+            struct Node* sNode1 = *sNodeTemp;
+            struct Node* sNode2 = sNode1 -> ptrRight;
+  
+            if (sNode1 -> iPayload > sNode2 -> iPayload) 
+            {
+                *sNodeTemp = swapNodeValues(sNode1, sNode2);
+                bSwap = true;
+            }
+  
+            sNodeTemp = &(*sNodeTemp) -> ptrRight;
+        }
+  
+        if (bSwap == false)
+        {
+            break;
+        }
+    }
+}
 
 
 #endif //TRABALHO_DE_ED_ARVORE_H
