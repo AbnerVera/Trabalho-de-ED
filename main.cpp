@@ -19,12 +19,16 @@ int main()
     return 0;
 }
 
-
+/**
+ * Exibe as opções do menu
+ * 
+ * Escreve na tela as possíveis das operações que 
+ * podem ser realizadas para a escolha do usuário
+*/
 void printMenu()
 {
-    setlocale(LC_ALL, "Portuguese");
     cout << "01. Construir uma árvore binária de busca a partir de um arquivo texto\n"
-            "02. Construir uma árvore binária de busca a partir de dados digitados pelo usuário\n"
+            "02. Construir uma árvore binária de busca a partir de dados digitados\n"
             "03. Verificar a altura da árvore\n"
             "04. Verificar o tamanho da árvore\n"
             "05. Inserir um elemento\n"
@@ -33,7 +37,7 @@ void printMenu()
             "08. Verificar se a árvore é completa\n"
             "09. Verificar se a árvore é perfeita\n"
             "10. Exibir a árvore utilizando (BFS)\n"
-            "11. Exibir a árvore PreOrder\n"
+            "11. Exibir a árvore em pré-ordem\n"
             "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n"
             "13. Converter a árvore em uma lista e ordenar com Selection Sort\n"
             "14. Converter a árvore em uma lista e ordenar com Insertion Sort\n"
@@ -42,22 +46,16 @@ void printMenu()
     cout << "\nDigite sua opção: ";
 }
 
-struct Node* teste(struct Node* ptrRoot)
-{
-    struct Node *root = ptrRoot;
 
-    for (int i = 0; i < 10; i++) 
-    {
-        int j = 1 - 2 * (i % 2);
-        root = insertNode(root, i * j);
-    }
-
-    traversePreOrder(root);
-    cout << endl;
-
-    return  root;
-}
-
+/**
+ * Informa o tempo de duração de uma operação
+ * 
+ * Exibe na tela uma mensagem informando quando tempo durou uma
+ * operação, considerando o tempo inicial formecido e que a operção 
+ * foi finalizada logo antes da chamada dessa função
+ * 
+ * @param timeStart tempo em que a operação foi iniciada
+*/
 void tempo(std::chrono::_V2::system_clock::time_point timeStart)
 {
     auto timeStop = high_resolution_clock::now();
@@ -74,7 +72,9 @@ void tempo(std::chrono::_V2::system_clock::time_point timeStart)
     }
 }
 
-
+/**
+ * Cria o menu para operações com árvore binaria
+*/
 void menu() {
 
     int iOption;
@@ -102,6 +102,7 @@ void menu() {
                 cout << "Digite o nome do arquivo: ";
                 cin >> strPath;
 
+                deleteTree(&root);
                 root = treeFromText(root, strPath);
                 break;
 
@@ -110,6 +111,8 @@ void menu() {
                 cout << "Digite o numero de elementos: ";
                 cin >> iValue;
                 cout << "\n<< ";
+
+                deleteTree(&root);
 
                 root = treeFromPrompt(root, iValue);
                 break;
@@ -138,7 +141,7 @@ void menu() {
                 cout << "Digite o elemento para remoção: ";
                 cin >> iValue;
 
-                deleteNode(root, iValue);
+                deleteNode(&root, root, iValue);
 
                 break;
 
@@ -151,29 +154,38 @@ void menu() {
 
                 if (ptrTemp != nullptr)
                 { 
-                    cout << "Endereço de " << iValue  << ": " << ptrTemp;
+                    cout << "\nEndereço de " << ptrTemp -> iPayload  << ": " << ptrTemp;
                 }
                 else 
                 {
-                    cout << "Elemento não encontrado";
+                    cout << "\nElemento não encontrado";
                 }
 
                 break;
 
             case 8:
                 cout << "08. Verificar se a árvore é completa\n" << endl;
+                if (isCompleteTree(root))
+                    cout << "A arvore e completa." << endl;
+                else
+                    cout << "A arvore nao e completa." << endl;
                 break;
 
             case 9:
                 cout << "09. Verificar se a árvore é perfeita\n" << endl;
+                if (isPerfectTree(root))
+                    cout << "A arvore e perfeita." << endl;
+                else
+                    cout << "A arvore nao e perfeita." << endl;
                 break;
 
             case 10:
                 cout << "10. Exibir a árvore utilizando (BFS)\n" << endl;
+                printLevelOrder(root);
                 break;
 
             case 11:
-                cout << "11. Exibir a árvore PreOrder\n" << endl;
+                cout << "11. Exibir a árvore em pré-ordem\n" << endl;
 
                 traversePreOrder(root);
 
@@ -208,11 +220,11 @@ void menu() {
                 root = linkedListToTree(root);
                 break;
             case -1:
+                deleteTree(&root);
                 cout << "Tchau!" << endl;
                 break;
 
             default:
-                root = teste(root);
                 break;
         }
 
