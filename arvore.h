@@ -693,10 +693,13 @@ struct Node* linkedListToTree(struct Node* sNode)
 
     while (sNode != nullptr)
     {   
+        // insere cada elemento da lista na árvore
         sTree = insertNode(sTree, sNode -> iPayload);
+        // vai para o próximo elemento da lista
         sNode = sNode -> ptrRight;
     }
 
+    // deleta a lista ligada
     deleteLinkedList(&sNode); 
     
     return sTree;
