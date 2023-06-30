@@ -177,6 +177,10 @@ void menu() {
 
             case 8:
                 cout << "08. Verificar se a árvore é completa\n" << endl;
+                if (isCompleteTree(root))
+                    cout << "A arvore e completa." << endl;
+                else
+                    cout << "A arvore nao e completa." << endl;
                 break;
 
             case 9:
