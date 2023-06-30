@@ -557,6 +557,7 @@ void selectSort(struct Node* sNode)
         struct Node* sMin = sTemp;
         struct Node* sNext = sTemp -> ptrRight;
   
+        // encontra o nó com o menor valor na lista restante
         while (sNext != nullptr) 
         {
             if (sMin -> iPayload > sNext -> iPayload)
@@ -570,6 +571,7 @@ void selectSort(struct Node* sNode)
         cout << "   Iteração " << iCount << endl;
         cout << "   Valor a ser comparado: " << sMin -> iPayload << endl;
         
+        // troca os valores do nó atual e do nó com o menor valor
         int iValue = sTemp -> iPayload;
 
         sTemp -> iPayload = sMin -> iPayload;
