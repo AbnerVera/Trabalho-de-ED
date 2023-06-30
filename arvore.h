@@ -23,6 +23,7 @@ void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
 void treeToLinkedList(struct Node*);
 void sortedInsert(struct Node**, struct Node*);
+void deleteLinkedList(struct Node**);
 void bubbleSort(struct Node**);
 void selectSort(struct Node*);
 void insertSort(struct Node**);
@@ -37,6 +38,7 @@ struct Node* deleteNode(struct Node* sNode, int iData);
 struct Node* searchNode(struct Node* sNode, int iData);
 struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2);
 struct Node* getNodeAtIndex(struct Node* sNode, int iIndex); 
+struct Node* linkedListToTree(struct Node* sNode);
 
 struct Node* newNode(int iData)
 {
@@ -457,7 +459,6 @@ void shellSort(struct Node* sNode)
             int iTemp = getNodeAtIndex(sNode, iOuterLoop) -> iPayload;
             int iInnerLoop;
             
-
             for (iInnerLoop = iOuterLoop; iInnerLoop >= iGap and getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload > iTemp; iInnerLoop -= iGap) 
             {
                 getNodeAtIndex(sNode, iInnerLoop) -> iPayload = getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload;
@@ -469,5 +470,34 @@ void shellSort(struct Node* sNode)
 
 }
 
+void deleteLinkedList(struct Node** sNode)
+{
+   struct Node* ptrCurrent = *sNode;
+   struct Node* sNext;
+ 
+   while (ptrCurrent != nullptr)
+   {
+       sNext = ptrCurrent -> ptrRight;
+       free(ptrCurrent);
+       ptrCurrent = sNext;
+   }
+
+   *sNode = nullptr;
+}
+
+struct Node* linkedListToTree(struct Node* sNode)
+{
+    struct Node* sTree = nullptr;
+
+    while (sNode != nullptr)
+    {   
+        sTree = insertNode(sTree, sNode -> iPayload);
+        sNode = sNode -> ptrRight;
+    }
+
+    deleteLinkedList(&sNode); 
+    
+    return sTree;
+}
 
 #endif //TRABALHO_DE_ED_ARVORE_H
