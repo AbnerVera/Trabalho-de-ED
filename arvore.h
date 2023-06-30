@@ -465,8 +465,10 @@ void treeToLinkedList(struct Node* root)
 {
     while (root != nullptr) 
     {
+        // se o nó tem um filho à esquerda
         if (root -> ptrLeft != nullptr) 
         {
+            // nó mais à direita do filho à esquerda
             struct Node* ptrCurrent = root -> ptrLeft;
             
             while (ptrCurrent -> ptrRight) 
@@ -474,8 +476,10 @@ void treeToLinkedList(struct Node* root)
                 ptrCurrent = ptrCurrent -> ptrRight;
             }
 
+            // anexa o filho à direita do nó à direita do nó mais à direita do filho à esquerda
             ptrCurrent -> ptrRight = root -> ptrRight;
 
+            // faz o nó apontar para o filho à esquerda como filho à direita
             root -> ptrRight = root -> ptrLeft;
             root -> ptrLeft = nullptr;
         }
