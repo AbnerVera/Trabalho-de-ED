@@ -200,7 +200,9 @@ void menu() {
 
             case 15:
                 cout << "15. Converter a árvore em uma lista e ordenar com Shell Sort\n" << endl;
-
+                treeToLinkedList(root);
+                shellSort(root);
+                break;
             case -1:
                 cout << "Tchau!" << endl;
                 break;

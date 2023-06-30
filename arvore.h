@@ -26,15 +26,17 @@ void sortedInsert(struct Node**, struct Node*);
 void bubbleSort(struct Node**);
 void selectSort(struct Node*);
 void insertSort(struct Node**);
-
+void shellSort(struct Node*);
 
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
+int lengthLinkedList(Node* sNode); 
 
 struct Node* insertNode(struct Node* sNode, int iData);
 struct Node* deleteNode(struct Node* sNode, int iData);
 struct Node* searchNode(struct Node* sNode, int iData);
 struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2);
+struct Node* getNodeAtIndex(struct Node* sNode, int iIndex); 
 
 struct Node* newNode(int iData)
 {
@@ -412,8 +414,60 @@ void sortedInsert(struct Node **sNode, struct Node *sNew)
         sNew -> ptrRight = ptrCurrent -> ptrRight;
         ptrCurrent -> ptrRight = sNew;
     }
+}
 
+int lengthLinkedList(struct Node* sNode) 
+{
+    int iLength = 0;
+    
+    while (sNode != nullptr) 
+    {
+        iLength++;
+        sNode = sNode -> ptrRight;
+    }
+    
+    return iLength;
+}
+
+struct Node* getNodeAtIndex(struct Node* sNode, int iIndex) 
+{
+    int iCount = 0;
+    while (sNode != nullptr) 
+    {
+        if (iCount == iIndex)
+        {
+            return sNode;
+        }
+
+        iCount++;
+        sNode = sNode -> ptrRight;
+    }
+
+    return nullptr;
+}
+
+void shellSort(struct Node* sNode) 
+{
+    int iLength = lengthLinkedList(sNode);
+    
+    for (int iGap = iLength / 2; iGap > 0; iGap /= 2) 
+    {
+        for (int iOuterLoop = iGap; iOuterLoop < iLength; iOuterLoop++) 
+        {
+            int iTemp = getNodeAtIndex(sNode, iOuterLoop) -> iPayload;
+            int iInnerLoop;
+            
+
+            for (iInnerLoop = iOuterLoop; iInnerLoop >= iGap and getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload > iTemp; iInnerLoop -= iGap) 
+            {
+                getNodeAtIndex(sNode, iInnerLoop) -> iPayload = getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload;
+            }
+
+            getNodeAtIndex(sNode, iInnerLoop) -> iPayload = iTemp;
+        }
+    }
 
 }
+
 
 #endif //TRABALHO_DE_ED_ARVORE_H
