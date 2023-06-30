@@ -520,12 +520,14 @@ void bubbleSort(struct Node** sNode)
 
         printLinkedList(*sNode);
 
+        // compara cada par de nós adjacentes
         for (int iInnerLoop = 0; iInnerLoop < iLength - iOuterLoop - 1; iInnerLoop++)
         {   
 
             struct Node* sNode1 = *sNodeTemp;
             struct Node* sNode2 = sNode1 -> ptrRight;
   
+            // se o valor do nó atual é maior que o próximo, troca os valores
             if (sNode1 -> iPayload > sNode2 -> iPayload) 
             {
                 *sNodeTemp = swapNodeValues(sNode1, sNode2);
@@ -535,6 +537,7 @@ void bubbleSort(struct Node** sNode)
             sNodeTemp = &(*sNodeTemp) -> ptrRight;
         }
   
+        // se não houve trocas, a lista está ordenada
         if (bSwap == false)
         {
             break;
