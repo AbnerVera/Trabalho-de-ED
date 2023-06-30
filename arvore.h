@@ -626,4 +626,39 @@ bool isPerfectTree(Node* root) {
     return checkPerfectTree(root, 0, expectedNodeCount);
 }
 
+// realiza a travessia em largura (BFS)
+void printLevelOrder(Node* root) {
+    // a árvore está vazia
+    if (root == NULL) return;
+
+    // fila vazia para o BFS
+    std::queue<Node*> q;
+
+    q.push(root);
+
+    while (1) {
+        // nós no nível atual
+        int nodeCount = q.size();
+        // não há nós no nível, encerra
+        if (nodeCount == 0) break;
+
+        while (nodeCount > 0) {
+            // remove o nó na frente da fila
+            Node* node = q.front();
+            q.pop();
+
+            // imprime o valor do nó
+            std::cout << node->iPayload << " ";
+
+            if (node->ptrLeft != NULL) q.push(node->ptrLeft);
+            if (node->ptrRight != NULL) q.push(node->ptrRight);
+
+            nodeCount--;
+        }
+
+        // novo nível (BFS)
+        std::cout << std::endl;
+    }
+}
+
 #endif //TRABALHO_DE_ED_ARVORE_H
