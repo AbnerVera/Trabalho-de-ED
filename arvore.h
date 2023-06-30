@@ -709,10 +709,13 @@ void printLinkedList(struct Node* sNode)
 {
     while (sNode != nullptr)
     {
+        // imprime o valor do nó
         cout << sNode -> iPayload << " -> ";
+        // vai para o próximo nó
         sNode = sNode -> ptrRight;
     }
 
+    // imprime nulo ao fim da lista
     cout << " nullptr " << endl;
 }
 
