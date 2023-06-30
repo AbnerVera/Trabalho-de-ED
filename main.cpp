@@ -46,14 +46,26 @@ struct Node* teste(struct Node* ptrRoot)
 {
     struct Node *root = ptrRoot;
 
-    for (int i = 0; i < 10; i++) 
-    {
-        int j = 1 - 2 * (i % 2);
-        root = insertNode(root, i * j);
-    }
+    cout << "*****PERIGO: TESTE, RISCO DE QUEBRAR A ÁRVORE***** \n\nSwap" << endl;
+    int iValor1, iValor2;
+    cout << "Digite o valor 1: " << endl;
+    cin >> iValor1;
 
-    traversePreOrder(root);
-    cout << endl;
+    struct Node* sNode1 = searchNode(root, iValor1);
+    cout << "Pais: pai do valor 1: " << sNode1->iPayload;
+    struct Node* sPai1 = searchParentNode(root, sNode1);
+    if (sPai1 != nullptr) cout << " = " << sPai1->iPayload << endl;
+
+    cout << "\nDigite o valor 2: " << endl;
+    cin >> iValor2;
+    
+    struct Node* sNode2 = searchNode(root, iValor2);    
+    struct Node* sPai2 = searchParentNode(root, sNode2);
+
+    cout << "      pai do valor 2: " << sNode2->iPayload;
+    if (sPai2 != nullptr) cout << " = " << sPai2->iPayload << endl;
+
+    swapNode(&root, sNode1, sNode2);
 
     return  root;
 }
@@ -138,7 +150,7 @@ void menu() {
                 cout << "Digite o elemento para remoção: ";
                 cin >> iValue;
 
-                deleteNode(root, iValue);
+                deleteNode(&root, root, iValue);
 
                 break;
 
@@ -151,7 +163,7 @@ void menu() {
 
                 if (ptrTemp != nullptr)
                 { 
-                    cout << "Endereço de " << iValue  << ": " << ptrTemp;
+                    cout << "Endereço de " << ptrTemp -> iPayload  << ": " << ptrTemp;
                 }
                 else 
                 {
@@ -181,14 +193,21 @@ void menu() {
 
             case 12:
                 cout << "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n" << endl;
+                treeToLinkedList(root);
+                bubbleSort(&root);
+
                 break;
 
             case 13:
                 cout << "13. Converter a árvore em uma lista e ordenar com Selection Sort\n" << endl;
+                treeToLinkedList(root);
+                selectSort(root);
                 break;
 
             case 14:
                 cout << "14. Converter a árvore em uma lista e ordenar com Insertion Sort\n" << endl;
+                treeToLinkedList(root);
+                insertSort(&root);
                 break;
 
             case 15:

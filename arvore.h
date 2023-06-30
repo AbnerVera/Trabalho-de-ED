@@ -19,16 +19,22 @@ struct Node* treeFromText(struct Node* root, string strPath);
 struct Node* treeFromPrompt(struct Node* root, int iSize);
 
 void traversePreOrder(struct Node*);
-void traverseInOrder(struct Node* );
+void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
+void treeToLinkedList(struct Node*);
+void sortedInsert(struct Node**, struct Node*);
+void bubbleSort(struct Node**);
+void selectSort(struct Node*);
+void insertSort(struct Node**);
+
 
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
 
-struct Node* insertNode(struct Node* node, int iData);
-struct Node* deleteNode(struct Node* node, int iData);
-struct Node* searchNode(struct Node* node, int iData);
-
+struct Node* insertNode(struct Node* sNode, int iData);
+struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData);
+struct Node* searchNode(struct Node* sNode, int iData);
+struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2);
 
 struct Node* newNode(int iData)
 {
@@ -64,7 +70,6 @@ void traverseInOrder(struct Node* ptrStartingNode)
         traverseInOrder(ptrStartingNode -> ptrRight);
     }
 }
-
 
 void traversePosOrder(struct Node* ptrStartingNode)
 {
@@ -155,7 +160,108 @@ struct Node* lesserLeaf(struct Node* sNode)  //lesserLeaf
     return ptrCurrent;
 }
 
-struct Node* deleteNode(struct Node* sNode, int iData)
+/**
+ * Procura o endereço na memória do pai de um nó na árvore.
+ *
+ * Usa a forma recursiva da função para achar o nó pai do nó
+ * buscado a partir da raiz. 
+ *
+ * @param root Ponterio do nó raiz da árvore.
+ * @param sNode Endereço do filho do valor a ser buscado na árvore.
+ * @return endereço do nó pai do nó buscado ou nullptr se o endereço
+ * não existir na árovre ou caso seja a própria raiz.
+*/
+struct Node* searchParentNode(struct Node* root, struct Node* sNode)
+{
+    if (root == nullptr || root == sNode)
+    {
+        return nullptr;
+    }
+
+    if (sNode == root -> ptrLeft || sNode == root -> ptrRight)
+    {
+        return root;
+    }
+    else if (sNode -> iPayload <= root -> iPayload)
+    {
+        return searchParentNode(root -> ptrLeft, sNode);
+    }
+    else
+    {
+        return searchParentNode(root -> ptrRight, sNode);
+    }
+}
+
+/**
+ * Troca a posição de dois nós na árvore
+ * 
+ * Não deve ser usado fora do delete, pois ele deordenaria a
+ * árvore e o seu uso é baseado em uma árvore correta.
+ * 
+ * 
+*/
+void swapNode(struct Node** root, struct Node* sNode1, struct Node* sNode2)
+{
+    if(sNode1 == sNode2 || sNode1 == nullptr || sNode2 == nullptr)
+    {
+        return;
+    }
+
+    struct Node* parentNode1 = searchParentNode((*root), sNode1);
+    struct Node* parentNode2 = searchParentNode((*root), sNode2);
+
+
+    if(sNode1 == (*root))       // Caso o nó 1 seja a raiz
+    {
+        if(parentNode2 -> iPayload > sNode2 -> iPayload) parentNode2 -> ptrLeft = sNode1;
+        else parentNode2 -> ptrRight = sNode1;
+
+        (*root) = sNode2;
+    }
+    else if (sNode2 == (*root))     // Caso o nó 2 seja a raiz
+    {
+        if(parentNode1 -> iPayload > sNode1 -> iPayload) parentNode1 -> ptrLeft = sNode2;
+        else parentNode1 -> ptrRight = sNode2;
+
+        (*root) = sNode1;
+    } 
+    else
+    {        
+        if(parentNode1 -> iPayload > sNode1 -> iPayload) parentNode1 -> ptrLeft = sNode2;
+        else parentNode1 -> ptrRight = sNode2;
+
+        if(parentNode2 -> iPayload > sNode2 -> iPayload) parentNode2 -> ptrLeft = sNode1;
+        else parentNode2 -> ptrRight = sNode1;
+    }
+
+    struct Node* ptrTempLeft = sNode1 -> ptrLeft;
+    struct Node* ptrTempRight = sNode1 -> ptrRight;
+
+    sNode1 -> ptrLeft = sNode2 -> ptrLeft;
+    sNode1 -> ptrRight = sNode2 -> ptrRight;
+
+    sNode2 -> ptrLeft = ptrTempLeft;
+    sNode2 -> ptrRight = ptrTempRight;
+    
+}
+
+/**
+ * Deleta nó do valor dado na árvore e a ajusta da melhor forma.
+ *
+ * Usa a forma recursiva da função para achar um nó com o valor
+ * buscado a partir da raiz. Se o valor buscado for menor que o
+ * valor do nó, buscamos a esquerda da árvore; caso seja maior
+ * buscamos a direita. A recursão acaba quando o valor é encontrado
+ * ou quando chegamos ao fim da árvore.
+ *
+ * @param root Ponterio do nó raiz da árvore no inicio da recursão.
+ * @param sNode Ponterio do nó raiz da árvore no inicio da recursão,
+ * ponterio a ser avaliado para ser deletado durante a recursão.
+ * @param iData Valor a ser deletado na árvore.
+ * @return raiz da árvode uma vez que durante a recursão a árvore
+ * é reconstruida.
+*/
+struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
 {
     if (sNode == nullptr)
     { 
@@ -164,11 +270,11 @@ struct Node* deleteNode(struct Node* sNode, int iData)
 
     if (iData < sNode -> iPayload) 
     {   
-        sNode -> ptrLeft = deleteNode(sNode -> ptrLeft, iData);
+        sNode -> ptrLeft = deleteNode(root, sNode -> ptrLeft, iData);
     }
     else if (iData > sNode -> iPayload) 
     {
-        sNode -> ptrRight = deleteNode(sNode -> ptrRight, iData);
+        sNode -> ptrRight = deleteNode(root, sNode -> ptrRight, iData);
     }
     else
     {
@@ -177,6 +283,8 @@ struct Node* deleteNode(struct Node* sNode, int iData)
         if (sNode -> ptrRight == nullptr)
         {
             ptrTemp = sNode -> ptrLeft;
+
+            if(sNode == (*root)) (*root) = ptrTemp;
     
             free(sNode);
 
@@ -186,6 +294,8 @@ struct Node* deleteNode(struct Node* sNode, int iData)
         {
             ptrTemp = sNode -> ptrRight;
 
+            if(sNode == (*root)) (*root) = ptrTemp;
+
             free(sNode);
 
             return ptrTemp;
@@ -193,12 +303,28 @@ struct Node* deleteNode(struct Node* sNode, int iData)
 
         ptrTemp = lesserLeaf(sNode -> ptrRight);
 
-        sNode -> iPayload = ptrTemp -> iPayload;
+        swapNode(root, sNode, ptrTemp);
 
-        sNode -> ptrRight = deleteNode(sNode -> ptrRight, ptrTemp -> iPayload);
+        cout << "raiz: " << (*root)->iPayload << "A ser deletado: " << sNode->iPayload << ", Lesser leaf: " << ptrTemp->iPayload;
+
+        ptrTemp -> ptrRight = deleteNode(root, ptrTemp -> ptrRight, sNode -> iPayload);
     }
 }
 
+/**
+ * Procura o endereço na memória do valor dado na árvore.
+ *
+ * Usa a forma recursiva da função para achar um nó com o valor
+ * buscado a partir da raiz. Se o valor buscado for menor que o
+ * valor do nó, buscamos a esquerda da árvore; caso seja maior
+ * buscamos a direita. A recursão acaba quando o valor é encontrado
+ * ou quando chegamos ao fim da árvore.
+ *
+ * @param sNode Ponterio do nó raiz da árvore.
+ * @param iData Valor a ser buscado na árvore.
+ * @return endereço do primeiro valor de iData encontrado ou nullptr
+ * se o dado não existir na árvore.
+*/
 struct Node* searchNode(struct Node* sNode, int iData)
 {
     if (sNode == nullptr)
@@ -229,8 +355,8 @@ struct Node* searchNode(struct Node* sNode, int iData)
  * toda ramificação da árvore, retornando a profundidade da folha
  * mais profunda.
  *
- * @param root Ponterio do Node raiz da árvore.
- * @param iAltura Inteiro, altura da raiz, inicializado em 0
+ * @param root Ponterio do nó raiz da árvore no inicio da recursão.
+ * @param iHeight Inteiro, altura da raiz, inicializado em 0.
  * @return inteiro representado a profundidade da folha mais profunda.
  */
 int treeHeight(struct Node* root, int iHeight)
@@ -249,13 +375,13 @@ int treeHeight(struct Node* root, int iHeight)
 }
 
 /**
- * Descobre o tamanho da árvore,
+ * Descobre o tamanho da árvore.
  *
  * Calcula o tamanho de uma árvore binaria, contado o número de
- * nós em toda sua ramificação
+ * nós em toda sua ramificação.
  *
- * @param root Ponterio do Node raiz da árvore
- * @param iTamanho Inteiro, tamanho da raiz, inicializado em 0
+ * @param root Ponterio do nó raiz da árvore no inicio da recursão.
+ * @param iSize Inteiro, tamanho da raiz, inicializado em 0.
  * @return inteiro representado o tamanho da árvore.
  */
 int treeSize(struct Node* root, int iSize)
@@ -271,6 +397,144 @@ int treeSize(struct Node* root, int iSize)
     {
         return 0;
     } 
+}
+
+void treeToLinkedList(struct Node* root)
+{
+    while (root != nullptr) 
+    {
+        if (root -> ptrLeft != nullptr) 
+        {
+            struct Node* ptrCurrent = root -> ptrLeft;
+            
+            while (ptrCurrent -> ptrRight) 
+            {
+                ptrCurrent = ptrCurrent -> ptrRight;
+            }
+
+            ptrCurrent -> ptrRight = root -> ptrRight;
+
+            root -> ptrRight = root -> ptrLeft;
+            root -> ptrLeft = nullptr;
+        }
+        
+        root = root -> ptrRight;
+    }
+}
+
+struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2) 
+{
+  struct Node* sNodeTemp = sNode2 -> ptrRight;
+
+  sNode2 -> ptrRight = sNode1;
+  sNode1 -> ptrRight = sNodeTemp;
+
+  return sNode2;
+}
+
+void bubbleSort(struct Node** sNode)
+{   
+    struct Node** sNodeTemp = sNode;
+    int iLength = 0;
+    
+    while (*sNodeTemp != nullptr)
+    {
+        iLength = iLength + 1;
+        sNodeTemp = &(*sNodeTemp) -> ptrRight;
+    }
+    
+    for (int iOuterLoop = 0; iOuterLoop <= iLength; iOuterLoop++) 
+    {
+        sNodeTemp = sNode;
+        bool bSwap = false;
+    
+        for (int iInnerLoop = 0; iInnerLoop < iLength - iOuterLoop - 1; iInnerLoop++)
+        {
+            struct Node* sNode1 = *sNodeTemp;
+            struct Node* sNode2 = sNode1 -> ptrRight;
+  
+            if (sNode1 -> iPayload > sNode2 -> iPayload) 
+            {
+                *sNodeTemp = swapNodeValues(sNode1, sNode2);
+                bSwap = true;
+            }
+  
+            sNodeTemp = &(*sNodeTemp) -> ptrRight;
+        }
+  
+        if (bSwap == false)
+        {
+            break;
+        }
+    }
+}
+
+void selectSort(struct Node* sNode)
+{
+    struct Node* sTemp = sNode;
+  
+    while (sTemp != nullptr) 
+    {
+        struct Node* sMin = sTemp;
+        struct Node* sNext = sTemp -> ptrRight;
+  
+        while (sNext != nullptr) 
+        {
+            if (sMin -> iPayload > sNext -> iPayload)
+            {
+                sMin = sNext;
+            }
+  
+            sNext = sNext -> ptrRight;
+        }
+  
+        int iValue = sTemp -> iPayload;
+
+        sTemp -> iPayload = sMin -> iPayload;
+        sMin -> iPayload = iValue;
+        sTemp = sTemp -> ptrRight;
+    }
+}
+
+void insertSort(struct Node** sNode)
+{
+    struct Node* sSorted = nullptr;
+    struct Node* ptrCurrent = *sNode;
+
+    while (ptrCurrent != nullptr)
+    {
+        struct Node* sNext = ptrCurrent -> ptrRight;
+
+        sortedInsert(&sSorted, ptrCurrent);
+
+        ptrCurrent = sNext;
+    }
+
+    *sNode = sSorted;
+}
+
+void sortedInsert(struct Node **sNode, struct Node *sNew)
+{
+    struct Node *ptrCurrent = nullptr;
+    
+    if (*sNode == nullptr or (*sNode) -> iPayload > sNew -> iPayload)
+    {
+        sNew -> ptrRight = *sNode;
+        *sNode = sNew;
+    }
+    else
+    {
+        ptrCurrent = *sNode;
+        while (ptrCurrent -> ptrRight != nullptr and ptrCurrent -> ptrRight -> iPayload <= sNew -> iPayload)
+        {
+            ptrCurrent = ptrCurrent -> ptrRight;
+        }
+
+        sNew -> ptrRight = ptrCurrent -> ptrRight;
+        ptrCurrent -> ptrRight = sNew;
+    }
+
+
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H
