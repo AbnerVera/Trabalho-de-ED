@@ -182,12 +182,14 @@ void menu() {
             case 12:
                 cout << "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n" << endl;
                 treeToLinkedList(root);
-                bubbleSortList(&root);
+                bubbleSort(&root);
 
                 break;
 
             case 13:
                 cout << "13. Converter a árvore em uma lista e ordenar com Selection Sort\n" << endl;
+                treeToLinkedList(root);
+                selectSort(root);
                 break;
 
             case 14:

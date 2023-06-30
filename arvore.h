@@ -22,6 +22,8 @@ void traversePreOrder(struct Node*);
 void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
 void treeToLinkedList(struct Node*);
+void bubbleSort(struct Node**);
+void selectSort(struct Node*);
 
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
@@ -306,7 +308,7 @@ struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2)
   return sNode2;
 }
 
-void bubbleSortList(struct Node** sNode)
+void bubbleSort(struct Node** sNode)
 {   
     struct Node** sNodeTemp = sNode;
     int iLength = 0;
@@ -343,5 +345,31 @@ void bubbleSortList(struct Node** sNode)
     }
 }
 
+void selectSort(struct Node* sNode)
+{
+    struct Node* sTemp = sNode;
+  
+    while (sTemp != nullptr) 
+    {
+        struct Node* sMin = sTemp;
+        struct Node* sNext = sTemp -> ptrRight;
+  
+        while (sNext != nullptr) 
+        {
+            if (sMin -> iPayload > sNext -> iPayload)
+            {
+                sMin = sNext;
+            }
+  
+            sNext = sNext -> ptrRight;
+        }
+  
+        int iValue = sTemp -> iPayload;
+
+        sTemp -> iPayload = sMin -> iPayload;
+        sMin -> iPayload = iValue;
+        sTemp = sTemp -> ptrRight;
+    }
+}
 
 #endif //TRABALHO_DE_ED_ARVORE_H
