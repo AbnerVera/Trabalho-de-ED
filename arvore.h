@@ -114,7 +114,7 @@ struct Node* treeFromText(struct Node* root, string strPath)
     char *cResult;
     int iValue;
 
-    for(int i = 1; !feof(archive); i++)
+    for(int iCount = 1; !feof(archive); iCount++)
     {
         // Lê uma linha (inclusive com o '\n')
         cResult = fgets(cRow, 100, archive);  // o 'fgets' lê até 99 caracteres ou até o '\n'
@@ -141,9 +141,10 @@ struct Node* treeFromText(struct Node* root, string strPath)
 */
 struct Node* treeFromPrompt(struct Node* root, int iSize)
 {
-    for(int i = 0; i < iSize; i++)
+    for(int iCount = 0; iCount < iSize; iCount++)
     {
         int iValue;
+        cout << "Insira o Valor de nº: " << iCount << endl;
         cin >> iValue;
         root = insertNode(root, iValue);
     }
