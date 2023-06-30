@@ -185,6 +185,10 @@ void menu() {
 
             case 9:
                 cout << "09. Verificar se a árvore é perfeita\n" << endl;
+                if (isPerfectTree(root))
+                    cout << "A arvore e perfeita." << endl;
+                else
+                    cout << "A arvore nao e perfeita." << endl;
                 break;
 
             case 10:
