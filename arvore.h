@@ -25,18 +25,23 @@ void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
 void treeToLinkedList(struct Node*);
 void sortedInsert(struct Node**, struct Node*);
+void deleteLinkedList(struct Node**);
+void printLinkedList(struct Node*);
 void bubbleSort(struct Node**);
 void selectSort(struct Node*);
 void insertSort(struct Node**);
-
+void shellSort(struct Node*);
 
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
+int lengthLinkedList(Node* sNode); 
 
 struct Node* insertNode(struct Node* sNode, int iData);
 struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData);
 struct Node* searchNode(struct Node* sNode, int iData);
 struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2);
+struct Node* getNodeAtIndex(struct Node* sNode, int iIndex); 
+struct Node* linkedListToTree(struct Node* sNode);
 
 /**
  * Cria um nó
@@ -495,13 +500,20 @@ void bubbleSort(struct Node** sNode)
         sNodeTemp = &(*sNodeTemp) -> ptrRight;
     }
     
+    cout << "Inicio da ordenação pelo algoritmo Bubble Sort: " << endl; 
+
     for (int iOuterLoop = 0; iOuterLoop <= iLength; iOuterLoop++) 
     {
         sNodeTemp = sNode;
         bool bSwap = false;
-    
+
+        cout << "  Iteração " << iOuterLoop << ": " << endl;
+
+        printLinkedList(*sNode);
+
         for (int iInnerLoop = 0; iInnerLoop < iLength - iOuterLoop - 1; iInnerLoop++)
-        {
+        {   
+
             struct Node* sNode1 = *sNodeTemp;
             struct Node* sNode2 = sNode1 -> ptrRight;
   
@@ -524,7 +536,10 @@ void bubbleSort(struct Node** sNode)
 void selectSort(struct Node* sNode)
 {
     struct Node* sTemp = sNode;
-  
+    int iCount = 1;
+
+    cout << "Inicio da ordenação pelo algoritmo Select Sort: " << endl; 
+
     while (sTemp != nullptr) 
     {
         struct Node* sMin = sTemp;
@@ -539,12 +554,18 @@ void selectSort(struct Node* sNode)
   
             sNext = sNext -> ptrRight;
         }
-  
+
+        cout << "   Iteração " << iCount << endl;
+        cout << "   Valor a ser comparado: " << sMin -> iPayload << endl;
+        
         int iValue = sTemp -> iPayload;
 
         sTemp -> iPayload = sMin -> iPayload;
         sMin -> iPayload = iValue;
         sTemp = sTemp -> ptrRight;
+        
+        printLinkedList(sNode);
+        iCount++;
     }
 }
 
@@ -585,8 +606,99 @@ void sortedInsert(struct Node **sNode, struct Node *sNew)
         sNew -> ptrRight = ptrCurrent -> ptrRight;
         ptrCurrent -> ptrRight = sNew;
     }
+}
 
+int lengthLinkedList(struct Node* sNode) 
+{
+    int iLength = 0;
+    
+    while (sNode != nullptr) 
+    {
+        iLength++;
+        sNode = sNode -> ptrRight;
+    }
+    
+    return iLength;
+}
 
+struct Node* getNodeAtIndex(struct Node* sNode, int iIndex) 
+{
+    int iCount = 0;
+    while (sNode != nullptr) 
+    {
+        if (iCount == iIndex)
+        {
+            return sNode;
+        }
+
+        iCount++;
+        sNode = sNode -> ptrRight;
+    }
+
+    return nullptr;
+}
+
+void shellSort(struct Node* sNode) 
+{
+    int iLength = lengthLinkedList(sNode);
+    
+    for (int iGap = iLength / 2; iGap > 0; iGap /= 2) 
+    {
+        for (int iOuterLoop = iGap; iOuterLoop < iLength; iOuterLoop++) 
+        {
+            int iTemp = getNodeAtIndex(sNode, iOuterLoop) -> iPayload;
+            int iInnerLoop;
+            
+            for (iInnerLoop = iOuterLoop; iInnerLoop >= iGap and getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload > iTemp; iInnerLoop -= iGap) 
+            {
+                getNodeAtIndex(sNode, iInnerLoop) -> iPayload = getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload;
+            }
+
+            getNodeAtIndex(sNode, iInnerLoop) -> iPayload = iTemp;
+        }
+    }
+
+}
+
+void deleteLinkedList(struct Node** sNode)
+{
+   struct Node* ptrCurrent = *sNode;
+   struct Node* sNext;
+ 
+   while (ptrCurrent != nullptr)
+   {
+       sNext = ptrCurrent -> ptrRight;
+       free(ptrCurrent);
+       ptrCurrent = sNext;
+   }
+
+   *sNode = nullptr;
+}
+
+struct Node* linkedListToTree(struct Node* sNode)
+{
+    struct Node* sTree = nullptr;
+
+    while (sNode != nullptr)
+    {   
+        sTree = insertNode(sTree, sNode -> iPayload);
+        sNode = sNode -> ptrRight;
+    }
+
+    deleteLinkedList(&sNode); 
+    
+    return sTree;
+}
+
+void printLinkedList(struct Node* sNode)
+{
+    while (sNode != nullptr)
+    {
+        cout << sNode -> iPayload << " -> ";
+        sNode = sNode -> ptrRight;
+    }
+
+    cout << " nullptr " << endl;
 }
 
 bool isCompleteTree(Node* root) {

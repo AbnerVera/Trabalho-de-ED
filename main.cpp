@@ -195,6 +195,7 @@ void menu() {
                 cout << "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n" << endl;
                 treeToLinkedList(root);
                 bubbleSort(&root);
+                root = linkedListToTree(root);
 
                 break;
 
@@ -202,17 +203,22 @@ void menu() {
                 cout << "13. Converter a árvore em uma lista e ordenar com Selection Sort\n" << endl;
                 treeToLinkedList(root);
                 selectSort(root);
+                root = linkedListToTree(root);
                 break;
 
             case 14:
                 cout << "14. Converter a árvore em uma lista e ordenar com Insertion Sort\n" << endl;
                 treeToLinkedList(root);
                 insertSort(&root);
+                root = linkedListToTree(root);
                 break;
 
             case 15:
                 cout << "15. Converter a árvore em uma lista e ordenar com Shell Sort\n" << endl;
-
+                treeToLinkedList(root);
+                shellSort(root);
+                root = linkedListToTree(root);
+                break;
             case -1:
                 deleteTree(&root);
                 cout << "Tchau!" << endl;
