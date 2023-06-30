@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <cmath>
 
 using namespace std;
 
@@ -583,6 +584,46 @@ bool isCompleteTree(Node* root) {
     }
 
     return true;
+}
+
+// calcula a altura de uma árvore
+int getHeight(Node* root) {
+    if (root == nullptr)
+        return 0;
+    
+    int leftHeight = getHeight(root->ptrLeft);
+    int rightHeight = getHeight(root->ptrRight);
+    
+    return max(leftHeight, rightHeight) + 1;
+}
+
+// função auxiliar para verificar se a árvore é perfeita
+bool checkPerfectTree(Node* node, int nodeCount, int expectedNodeCount) {
+    // nó é nullptr
+    if (node == nullptr)
+        return true;
+    
+    // o número de nós já excede o número máximo esperado, a árvore não é perfeita
+    if (nodeCount >= expectedNodeCount)
+        return false;
+    
+    // recursivamente a subárvore esquerda e a subárvore direita
+    return checkPerfectTree(node->ptrLeft, 2 * nodeCount + 1, expectedNodeCount) && 
+           checkPerfectTree(node->ptrRight, 2 * nodeCount + 2, expectedNodeCount);
+}
+
+
+bool isPerfectTree(Node* root) {
+    // árvore vazia é considerada perfeita
+    if (root == nullptr)
+        return true;
+    
+    int height = getHeight(root);
+    
+    // o número máximo de nós em uma árvore perfeita de altura 'height'
+    int expectedNodeCount = pow(2, height) - 1;
+    
+    return checkPerfectTree(root, 0, expectedNodeCount);
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H
