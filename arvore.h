@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <queue>
+#include <cmath>
 
 using namespace std;
 
@@ -585,6 +587,121 @@ void sortedInsert(struct Node **sNode, struct Node *sNew)
     }
 
 
+}
+
+bool isCompleteTree(Node* root) {
+    // árvore vazia é considerada completa
+    if (root == nullptr)
+        return true;
+
+    queue<Node*> q;
+    q.push(root);
+
+    bool flag = false; // flag que infica se um nó não completo foi encontrado
+
+    // percorrendo a árvore usando busca em largura
+    while (!q.empty()) {
+        Node* temp = q.front();
+        q.pop();
+
+        // um nó não completo já foi encontrado,mas um nó filho não é nullptr, a árvore não é completa
+        if (flag && (temp->ptrLeft != nullptr || temp->ptrRight != nullptr))
+            return false;
+
+        // o nó esquerdo não é nullptr
+        if (temp->ptrLeft != nullptr) {
+            q.push(temp->ptrLeft);
+
+            // um nó não completo foi encontrado anteriormente, mas o nó atual não tem filho direito, a árvore não é completa
+            if (flag && temp->ptrRight == nullptr)
+                return false;
+        }
+        // o nó direito não é nullptr
+        else if (temp->ptrRight != nullptr) {
+            // A árvore não é completa
+            return false;
+        }
+        // não entre em nenhum dos casos de não completa, então completa
+        else
+            flag = true;
+    }
+
+    return true;
+}
+
+// calcula a altura de uma árvore
+int getHeight(Node* root) {
+    if (root == nullptr)
+        return 0;
+    
+    int leftHeight = getHeight(root->ptrLeft);
+    int rightHeight = getHeight(root->ptrRight);
+    
+    return max(leftHeight, rightHeight) + 1;
+}
+
+// função auxiliar para verificar se a árvore é perfeita
+bool checkPerfectTree(Node* node, int nodeCount, int expectedNodeCount) {
+    // nó é nullptr
+    if (node == nullptr)
+        return true;
+    
+    // o número de nós já excede o número máximo esperado, a árvore não é perfeita
+    if (nodeCount >= expectedNodeCount)
+        return false;
+    
+    // recursivamente a subárvore esquerda e a subárvore direita
+    return checkPerfectTree(node->ptrLeft, 2 * nodeCount + 1, expectedNodeCount) && 
+           checkPerfectTree(node->ptrRight, 2 * nodeCount + 2, expectedNodeCount);
+}
+
+
+bool isPerfectTree(Node* root) {
+    // árvore vazia é considerada perfeita
+    if (root == nullptr)
+        return true;
+    
+    int height = getHeight(root);
+    
+    // o número máximo de nós em uma árvore perfeita de altura 'height'
+    int expectedNodeCount = pow(2, height) - 1;
+    
+    return checkPerfectTree(root, 0, expectedNodeCount);
+}
+
+// realiza a travessia em largura (BFS)
+void printLevelOrder(Node* root) {
+    // a árvore está vazia
+    if (root == NULL) return;
+
+    // fila vazia para o BFS
+    std::queue<Node*> q;
+
+    q.push(root);
+
+    while (1) {
+        // nós no nível atual
+        int nodeCount = q.size();
+        // não há nós no nível, encerra
+        if (nodeCount == 0) break;
+
+        while (nodeCount > 0) {
+            // remove o nó na frente da fila
+            Node* node = q.front();
+            q.pop();
+
+            // imprime o valor do nó
+            std::cout << node->iPayload << " ";
+
+            if (node->ptrLeft != NULL) q.push(node->ptrLeft);
+            if (node->ptrRight != NULL) q.push(node->ptrRight);
+
+            nodeCount--;
+        }
+
+        // novo nível (BFS)
+        std::cout << std::endl;
+    }
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H
