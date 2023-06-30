@@ -114,6 +114,7 @@ void menu() {
                 cout << "Digite o nome do arquivo: ";
                 cin >> strPath;
 
+                deleteTree(&root);
                 root = treeFromText(root, strPath);
                 break;
 
@@ -122,6 +123,8 @@ void menu() {
                 cout << "Digite o numero de elementos: ";
                 cin >> iValue;
                 cout << "\n<< ";
+
+                deleteTree(&root);
 
                 root = treeFromPrompt(root, iValue);
                 break;
@@ -214,6 +217,7 @@ void menu() {
                 cout << "15. Converter a árvore em uma lista e ordenar com Shell Sort\n" << endl;
 
             case -1:
+                deleteTree(&root);
                 cout << "Tchau!" << endl;
                 break;
 

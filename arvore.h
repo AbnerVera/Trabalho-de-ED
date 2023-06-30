@@ -182,7 +182,7 @@ struct Node* searchParentNode(struct Node* root, struct Node* sNode)
     {
         return root;
     }
-    else if (sNode -> iPayload <= root -> iPayload)
+    else if (sNode -> iPayload < root -> iPayload)
     {
         return searchParentNode(root -> ptrLeft, sNode);
     }
@@ -213,24 +213,24 @@ void swapNode(struct Node** root, struct Node* sNode1, struct Node* sNode2)
 
     if(sNode1 == (*root))       // Caso o nó 1 seja a raiz
     {
-        if(parentNode2 -> iPayload > sNode2 -> iPayload) parentNode2 -> ptrLeft = sNode1;
+        if(parentNode2 -> iPayload >= sNode2 -> iPayload) parentNode2 -> ptrLeft = sNode1;
         else parentNode2 -> ptrRight = sNode1;
 
         (*root) = sNode2;
     }
     else if (sNode2 == (*root))     // Caso o nó 2 seja a raiz
     {
-        if(parentNode1 -> iPayload > sNode1 -> iPayload) parentNode1 -> ptrLeft = sNode2;
+        if(parentNode1 -> iPayload >= sNode1 -> iPayload) parentNode1 -> ptrLeft = sNode2;
         else parentNode1 -> ptrRight = sNode2;
 
         (*root) = sNode1;
     } 
     else
     {        
-        if(parentNode1 -> iPayload > sNode1 -> iPayload) parentNode1 -> ptrLeft = sNode2;
+        if(parentNode1 -> iPayload >= sNode1 -> iPayload) parentNode1 -> ptrLeft = sNode2;
         else parentNode1 -> ptrRight = sNode2;
 
-        if(parentNode2 -> iPayload > sNode2 -> iPayload) parentNode2 -> ptrLeft = sNode1;
+        if(parentNode2 -> iPayload >= sNode2 -> iPayload) parentNode2 -> ptrLeft = sNode1;
         else parentNode2 -> ptrRight = sNode1;
     }
 
@@ -305,9 +305,16 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
 
         swapNode(root, sNode, ptrTemp);
 
-        cout << "raiz: " << (*root)->iPayload << "A ser deletado: " << sNode->iPayload << ", Lesser leaf: " << ptrTemp->iPayload;
-
         ptrTemp -> ptrRight = deleteNode(root, ptrTemp -> ptrRight, sNode -> iPayload);
+    }
+}
+
+void deleteTree(struct Node** root)
+{
+    struct Node* ptrDel = (*root);
+    while(ptrDel != nullptr)
+    {
+        ptrDel = deleteNode(root, ptrDel, ptrDel -> iPayload);
     }
 }
 
