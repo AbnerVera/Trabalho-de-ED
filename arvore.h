@@ -465,8 +465,10 @@ void treeToLinkedList(struct Node* root)
 {
     while (root != nullptr) 
     {
+        // se o nó tem um filho à esquerda
         if (root -> ptrLeft != nullptr) 
         {
+            // nó mais à direita do filho à esquerda
             struct Node* ptrCurrent = root -> ptrLeft;
             
             while (ptrCurrent -> ptrRight) 
@@ -474,8 +476,10 @@ void treeToLinkedList(struct Node* root)
                 ptrCurrent = ptrCurrent -> ptrRight;
             }
 
+            // anexa o filho à direita do nó à direita do nó mais à direita do filho à esquerda
             ptrCurrent -> ptrRight = root -> ptrRight;
 
+            // faz o nó apontar para o filho à esquerda como filho à direita
             root -> ptrRight = root -> ptrLeft;
             root -> ptrLeft = nullptr;
         }
@@ -516,12 +520,14 @@ void bubbleSort(struct Node** sNode)
 
         printLinkedList(*sNode);
 
+        // compara cada par de nós adjacentes
         for (int iInnerLoop = 0; iInnerLoop < iLength - iOuterLoop - 1; iInnerLoop++)
         {   
 
             struct Node* sNode1 = *sNodeTemp;
             struct Node* sNode2 = sNode1 -> ptrRight;
   
+            // se o valor do nó atual é maior que o próximo, troca os valores
             if (sNode1 -> iPayload > sNode2 -> iPayload) 
             {
                 *sNodeTemp = swapNodeValues(sNode1, sNode2);
@@ -531,6 +537,7 @@ void bubbleSort(struct Node** sNode)
             sNodeTemp = &(*sNodeTemp) -> ptrRight;
         }
   
+        // se não houve trocas, a lista está ordenada
         if (bSwap == false)
         {
             break;
@@ -550,6 +557,7 @@ void selectSort(struct Node* sNode)
         struct Node* sMin = sTemp;
         struct Node* sNext = sTemp -> ptrRight;
   
+        // encontra o nó com o menor valor na lista restante
         while (sNext != nullptr) 
         {
             if (sMin -> iPayload > sNext -> iPayload)
@@ -563,6 +571,7 @@ void selectSort(struct Node* sNode)
         cout << "   Iteração " << iCount << endl;
         cout << "   Valor a ser comparado: " << sMin -> iPayload << endl;
         
+        // troca os valores do nó atual e do nó com o menor valor
         int iValue = sTemp -> iPayload;
 
         sTemp -> iPayload = sMin -> iPayload;
@@ -647,18 +656,22 @@ void shellSort(struct Node* sNode)
 {
     int iLength = lengthLinkedList(sNode);
     
+    // ordenação começa com um grande intervalo e vai diminuindo
     for (int iGap = iLength / 2; iGap > 0; iGap /= 2) 
     {
         for (int iOuterLoop = iGap; iOuterLoop < iLength; iOuterLoop++) 
         {
+            // salva o valor do nó atual
             int iTemp = getNodeAtIndex(sNode, iOuterLoop) -> iPayload;
             int iInnerLoop;
             
+            // move os elementos da lista que são maiores que o valor salvo para frente no intervalo dado
             for (iInnerLoop = iOuterLoop; iInnerLoop >= iGap and getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload > iTemp; iInnerLoop -= iGap) 
             {
                 getNodeAtIndex(sNode, iInnerLoop) -> iPayload = getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload;
             }
 
+            // valor salvo na posição correta dentro do intervalo
             getNodeAtIndex(sNode, iInnerLoop) -> iPayload = iTemp;
         }
     }
@@ -672,8 +685,11 @@ void deleteLinkedList(struct Node** sNode)
  
    while (ptrCurrent != nullptr)
    {
+       // salva o próximo nó
        sNext = ptrCurrent -> ptrRight;
+       // deleta o nó atual
        free(ptrCurrent);
+       // vai para o próximo nó
        ptrCurrent = sNext;
    }
 
@@ -686,10 +702,13 @@ struct Node* linkedListToTree(struct Node* sNode)
 
     while (sNode != nullptr)
     {   
+        // insere cada elemento da lista na árvore
         sTree = insertNode(sTree, sNode -> iPayload);
+        // vai para o próximo elemento da lista
         sNode = sNode -> ptrRight;
     }
 
+    // deleta a lista ligada
     deleteLinkedList(&sNode); 
     
     return sTree;
@@ -699,10 +718,13 @@ void printLinkedList(struct Node* sNode)
 {
     while (sNode != nullptr)
     {
+        // imprime o valor do nó
         cout << sNode -> iPayload << " -> ";
+        // vai para o próximo nó
         sNode = sNode -> ptrRight;
     }
 
+    // imprime nulo ao fim da lista
     cout << " nullptr " << endl;
 }
 
