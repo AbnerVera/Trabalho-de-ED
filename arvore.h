@@ -363,7 +363,10 @@ void bubbleSort(struct Node** sNode)
 void selectSort(struct Node* sNode)
 {
     struct Node* sTemp = sNode;
-  
+    int iCount = 1;
+
+    cout << "Inicio da ordenação pelo algoritmo Select Sort: " << endl; 
+
     while (sTemp != nullptr) 
     {
         struct Node* sMin = sTemp;
@@ -378,12 +381,18 @@ void selectSort(struct Node* sNode)
   
             sNext = sNext -> ptrRight;
         }
-  
+
+        cout << "   Iteração " << iCount << endl;
+        cout << "   Valor a ser comparado: " << sMin -> iPayload << endl;
+        
         int iValue = sTemp -> iPayload;
 
         sTemp -> iPayload = sMin -> iPayload;
         sMin -> iPayload = iValue;
         sTemp = sTemp -> ptrRight;
+        
+        printLinkedList(sNode);
+        iCount++;
     }
 }
 
