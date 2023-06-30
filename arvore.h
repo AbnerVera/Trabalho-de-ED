@@ -24,6 +24,7 @@ void traversePosOrder(struct Node*);
 void treeToLinkedList(struct Node*);
 void sortedInsert(struct Node**, struct Node*);
 void deleteLinkedList(struct Node**);
+void printLinkedList(struct Node*);
 void bubbleSort(struct Node**);
 void selectSort(struct Node*);
 void insertSort(struct Node**);
@@ -326,13 +327,20 @@ void bubbleSort(struct Node** sNode)
         sNodeTemp = &(*sNodeTemp) -> ptrRight;
     }
     
+    cout << "Inicio da ordenação pelo algoritmo Bubble Sort: " << endl; 
+
     for (int iOuterLoop = 0; iOuterLoop <= iLength; iOuterLoop++) 
     {
         sNodeTemp = sNode;
         bool bSwap = false;
-    
+
+        cout << "  Iteração " << iOuterLoop << ": " << endl;
+
+        printLinkedList(*sNode);
+
         for (int iInnerLoop = 0; iInnerLoop < iLength - iOuterLoop - 1; iInnerLoop++)
-        {
+        {   
+
             struct Node* sNode1 = *sNodeTemp;
             struct Node* sNode2 = sNode1 -> ptrRight;
   
@@ -498,6 +506,17 @@ struct Node* linkedListToTree(struct Node* sNode)
     deleteLinkedList(&sNode); 
     
     return sTree;
+}
+
+void printLinkedList(struct Node* sNode)
+{
+    while (sNode != nullptr)
+    {
+        cout << sNode -> iPayload << " -> ";
+        sNode = sNode -> ptrRight;
+    }
+
+    cout << " nullptr " << endl;
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H
