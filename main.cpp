@@ -194,6 +194,8 @@ void menu() {
 
             case 14:
                 cout << "14. Converter a árvore em uma lista e ordenar com Insertion Sort\n" << endl;
+                treeToLinkedList(root);
+                insertSort(&root);
                 break;
 
             case 15:
