@@ -46,7 +46,8 @@ struct Node* teste(struct Node* ptrRoot)
 {
     struct Node *root = ptrRoot;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) 
+    {
         int j = 1 - 2 * (i % 2);
         root = insertNode(root, i * j);
     }
@@ -63,85 +64,99 @@ void tempo(std::chrono::_V2::system_clock::time_point timeStart)
     auto timeDurationNano = duration_cast<nanoseconds>(timeStop - timeStart);
     auto timeDurationSegundo = duration_cast<seconds>(timeStop - timeStart);
 
-    if(timeDurationSegundo.count() <= 0) cout << "\n\nTempo da operação: " << timeDurationNano.count() << " nanosegundos" << endl;
-    else cout << "\n\nTempo da operação: " << timeDurationSegundo.count() << " segundos" << endl;
+    if (timeDurationSegundo.count() <= 0)
+    { 
+        cout << "\n\nTempo da operação: " << timeDurationNano.count() << " nanosegundos" << endl;
+    }
+    else 
+    { 
+        cout << "\n\nTempo da operação: " << timeDurationSegundo.count() << " segundos" << endl;
+    }
 }
+
 
 void menu() {
 
-    int iOpcao;
+    int iOption;
+    int iValue;
     struct Node* root = nullptr;
     struct Node* ptrTemp = nullptr;
-    int iValor;
-    string sEndereco;
+    string strPath;
     auto timeStart = high_resolution_clock::now();
 
-    while (iOpcao != -1){
+    while (iOption != -1){
 
         system("cls");
 
         printMenu();
-        cin >> iOpcao;
+        cin >> iOption;
 
         system("cls");
 
         timeStart = high_resolution_clock::now();
 
-        switch (iOpcao) {
+        switch (iOption) 
+        {
             case 1:
                 cout << "01. Construir uma árvore binária de busca a partir de um arquivo texto\n" << endl;
                 cout << "Digite o nome do arquivo: ";
-                cin >> sEndereco;
+                cin >> strPath;
 
-                root = arvoreTexto(root, sEndereco);
+                root = treeFromText(root, strPath);
                 break;
 
             case 2:
                 cout << "02. Construir uma árvore binária de busca a partir de dados digitados\n" << endl;
                 cout << "Digite o numero de elementos: ";
-                cin >> iValor;
+                cin >> iValue;
                 cout << "\n<< ";
 
-                root = arvoreDigitado(root, iValor);
+                root = treeFromPrompt(root, iValue);
                 break;
 
             case 3:
                 cout << "03. Verificar a altura da árvore\n" << endl;
-                cout << "Altura arvore: " << alturaArvore(root) << endl;
+                cout << "Altura arvore: " << treeHeight(root) << endl;
                 break;
 
             case 4:
                 cout << "04. Verificar o tamanho da árvore\n" << endl;
-                cout << "Tamanho arvore: " << tamanhoArvore(root) << endl;
+                cout << "Tamanho arvore: " << treeSize(root) << endl;
                 break;
 
             case 5:
                 cout << "05. Inserir um elemento\n" << endl;
                 cout << "Digite o elemento: ";
-                cin >> iValor;
+                cin >> iValue;
 
-                root = insertNode(root, iValor);
+                root = insertNode(root, iValue);
 
                 break;
 
             case 6:
                 cout << "06. Remover um elemento\n" << endl;
                 cout << "Digite o elemento para remoção: ";
-                cin >> iValor;
+                cin >> iValue;
 
-                deleteNode(root, iValor);
+                deleteNode(root, iValue);
 
                 break;
 
             case 7:
                 cout << "07. Buscar o endereço de memória de um elemento\n" << endl;
                 cout << "Digite o elemento: ";
-                cin >> iValor;
+                cin >> iValue;
 
-                ptrTemp =  searchNode(root, iValor);
+                ptrTemp =  searchNode(root, iValue);
 
-                if (ptrTemp != nullptr) cout << "Endereço de " << iValor  << ": " << ptrTemp;
-                else cout << "Elemento não encontrado";
+                if (ptrTemp != nullptr)
+                { 
+                    cout << "Endereço de " << iValue  << ": " << ptrTemp;
+                }
+                else 
+                {
+                    cout << "Elemento não encontrado";
+                }
 
                 break;
 
@@ -188,7 +203,7 @@ void menu() {
                 break;
         }
 
-        if(iOpcao != -1)
+        if(iOption != -1)
         {
             tempo(timeStart);
             system("pause");

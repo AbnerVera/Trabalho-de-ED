@@ -15,39 +15,41 @@ struct Node
 
 struct Node* newNode(int iData);
 
-struct Node* arvoreTexto(struct Node* root, string sEndereco);
-struct Node* arvoreDigitado(struct Node* root, int iTamanho);
+struct Node* treeFromText(struct Node* root, string strPath);
+struct Node* treeFromPrompt(struct Node* root, int iSize);
 
 void traversePreOrder(struct Node*);
 void traverseInOrder(struct Node* );
 void traversePosOrder(struct Node*);
 
-int alturaArvore(struct Node* , int iAltura = 0);
-int tamanhoArvore(struct Node* root,  int iTamanho = 0);
+int treeHeight(struct Node* root, int iHeight = 0);
+int treeSize(struct Node* root,  int iSize = 0);
 
 struct Node* insertNode(struct Node* node, int iData);
 struct Node* deleteNode(struct Node* node, int iData);
 struct Node* searchNode(struct Node* node, int iData);
 
 
-struct Node* newNode(int iData){
+struct Node* newNode(int iData)
+{
     struct Node* newNode = (struct Node*) malloc(sizeof(struct Node));
-    newNode->iPayload = iData;
-    newNode->ptrLeft = nullptr;
-    newNode->ptrRight = nullptr;
+
+    newNode -> iPayload = iData;
+    newNode -> ptrLeft = nullptr;
+    newNode -> ptrRight = nullptr;
+
     return newNode;
 }
-
 
 void traversePreOrder(struct Node* ptrStartingNode)
 {
     if(ptrStartingNode != nullptr)
     {
-        cout << " " << ptrStartingNode->iPayload;
-        traversePreOrder(ptrStartingNode->ptrLeft);
-        traversePreOrder(ptrStartingNode->ptrRight);
-    }
+        cout << " " << ptrStartingNode -> iPayload;
 
+        traversePreOrder(ptrStartingNode -> ptrLeft);
+        traversePreOrder(ptrStartingNode -> ptrRight);
+    }
 }
 
 
@@ -55,9 +57,11 @@ void traverseInOrder(struct Node* ptrStartingNode)
 {
     if(ptrStartingNode != nullptr)
     {
-        traverseInOrder(ptrStartingNode->ptrLeft);
-        cout << " " << ptrStartingNode->iPayload;
-        traverseInOrder(ptrStartingNode->ptrRight);
+        traverseInOrder(ptrStartingNode -> ptrLeft);
+
+        cout << " " << ptrStartingNode -> iPayload;
+
+        traverseInOrder(ptrStartingNode -> ptrRight);
     }
 }
 
@@ -66,138 +70,156 @@ void traversePosOrder(struct Node* ptrStartingNode)
 {
     if(ptrStartingNode != nullptr)
     {
-        traversePosOrder(ptrStartingNode->ptrLeft);
-        traversePosOrder(ptrStartingNode->ptrRight);
-        cout << " " << ptrStartingNode->iPayload;
+        traversePosOrder(ptrStartingNode -> ptrLeft);
+        traversePosOrder(ptrStartingNode -> ptrRight);
+
+        cout << " " << ptrStartingNode -> iPayload;
     }
 }
 
-
-struct Node* arvoreTexto(struct Node* root, string sEndereco)
+struct Node* treeFromText(struct Node* root, string strPath)
 {
-    FILE *arq;
+    FILE *archive;
     
-    arq = fopen(sEndereco.c_str(), "rt");
+    archive = fopen(strPath.c_str(), "rt");
 
-    if (arq == nullptr)
+    if (archive == nullptr)
     {
         cout << "Erro ao encontrar o arquivo";
         return nullptr;
     }
 
-    char Linha[100];
-    char *result;
-    int iValor;
+    char cRow[100];
+    char *cResult;
+    int iValue;
 
-    for(int i = 1; !feof(arq); i++)
+    for(int i = 1; !feof(archive); i++)
     {
         // Lê uma linha (inclusive com o '\n')
-        result = fgets(Linha, 100, arq);  // o 'fgets' lê até 99 caracteres ou até o '\n'
-        if (result)  // Se foi possível ler
+        cResult = fgets(cRow, 100, archive);  // o 'fgets' lê até 99 caracteres ou até o '\n'
+        
+        if (cResult)  // Se foi possível ler
         {
-            sscanf(Linha, "%d", &iValor);
-            root = insertNode(root, iValor);
+            sscanf(cRow, "%d", &iValue);
+            root = insertNode(root, iValue);
         }
     }
 
-    fclose(arq);
+    fclose(archive);
 
     return root;
 }
 
 
-struct Node* arvoreDigitado(struct Node* root, int iTamanho)
+struct Node* treeFromPrompt(struct Node* root, int iSize)
 {
-    for(int i = 0; i < iTamanho; i++)
+    for(int i = 0; i < iSize; i++)
     {
-        int iValor;
-        cin >> iValor;
-        root = insertNode(root, iValor);
+        int iValue;
+        cin >> iValue;
+        root = insertNode(root, iValue);
     }
+
     return root;
 }
 
 
-struct Node* insertNode(struct Node* node, int iData)
+struct Node* insertNode(struct Node* sNode, int iData)
 {
-    if(node == nullptr)
+    if(sNode == nullptr)
     {
         return newNode(iData);
     }
 
-    if(iData < node->iPayload)
+    if(iData < sNode -> iPayload)
     {
-        node->ptrLeft = insertNode(node->ptrLeft, iData);
+        sNode -> ptrLeft = insertNode(sNode -> ptrLeft, iData);
     }
     else
     {
-        node->ptrRight = insertNode(node->ptrRight, iData);
+        sNode -> ptrRight = insertNode(sNode -> ptrRight, iData);
     }
-    return node;
+
+    return sNode;
 }
 
-struct Node* menorFolha(struct Node* node)  //lesserLeaf
+struct Node* lesserLeaf(struct Node* sNode)  //lesserLeaf
 {
-    struct Node* ptrCurrent = node;
+    struct Node* ptrCurrent = sNode;
 
-    while(ptrCurrent && ptrCurrent->ptrLeft != nullptr) ptrCurrent = ptrCurrent->ptrLeft;
+    while (ptrCurrent && ptrCurrent->ptrLeft != nullptr)
+    {   
+        ptrCurrent = ptrCurrent->ptrLeft;
+    }
 
     return ptrCurrent;
 }
 
-struct Node* deleteNode(struct Node* node, int iData)
+struct Node* deleteNode(struct Node* sNode, int iData)
 {
-    if(node == nullptr) return node;
+    if (sNode == nullptr)
+    { 
+        return sNode;
+    }
 
-    if(iData < node->iPayload) node->ptrLeft = deleteNode(node->ptrLeft, iData);
-    else if(iData > node->iPayload) node->ptrRight = deleteNode(node->ptrRight, iData);
+    if (iData < sNode -> iPayload) 
+    {   
+        sNode -> ptrLeft = deleteNode(sNode -> ptrLeft, iData);
+    }
+    else if (iData > sNode -> iPayload) 
+    {
+        sNode -> ptrRight = deleteNode(sNode -> ptrRight, iData);
+    }
     else
     {
         struct Node* ptrTemp = nullptr;
-        if(node->ptrRight == nullptr)
+
+        if (sNode -> ptrRight == nullptr)
         {
-            ptrTemp = node->ptrLeft;
-            free(node);
+            ptrTemp = sNode -> ptrLeft;
+    
+            free(sNode);
 
             return ptrTemp;
         }
-        else if(node->ptrLeft == nullptr)
+        else if(sNode -> ptrLeft == nullptr)
         {
-            ptrTemp = node->ptrRight;
-            free(node);
+            ptrTemp = sNode -> ptrRight;
+
+            free(sNode);
 
             return ptrTemp;
         }
 
-        ptrTemp = menorFolha(node->ptrRight);
+        ptrTemp = lesserLeaf(sNode -> ptrRight);
 
-        node->iPayload = ptrTemp->iPayload;
+        sNode -> iPayload = ptrTemp -> iPayload;
 
-        node->ptrRight = deleteNode(node->ptrRight, ptrTemp->iPayload);
-
+        sNode -> ptrRight = deleteNode(sNode -> ptrRight, ptrTemp -> iPayload);
     }
 }
 
-struct Node* searchNode(struct Node* node, int iData)
+struct Node* searchNode(struct Node* sNode, int iData)
 {
-    if(node == nullptr)
+    if (sNode == nullptr)
     {
         return nullptr;
     }
 
-    if(iData == node->iPayload)
+    if (iData == sNode -> iPayload)
     {
-        return node;
+        return sNode;
     }
-    else if(iData < node->iPayload)
+    else if (iData < sNode -> iPayload)
     {
-        return searchNode(node->ptrLeft, iData);
+        return searchNode(sNode -> ptrLeft, iData);
     }
     else
     {
-        return searchNode(node->ptrRight, iData);
+        return searchNode(sNode -> ptrRight, iData);
     }
-    return node;
+
+    return sNode;
 }
 
 /**
@@ -211,19 +233,20 @@ struct Node* searchNode(struct Node* node, int iData)
  * @param iAltura Inteiro, altura da raiz, inicializado em 0
  * @return inteiro representado a profundidade da folha mais profunda.
  */
-int alturaArvore(struct Node* root, int iAltura)
+int treeHeight(struct Node* root, int iHeight)
 {
     if (root != nullptr)
     {
-        int AltLeft = alturaArvore(root->ptrLeft, iAltura + 1);
-        int AltRight = alturaArvore(root->ptrRight, iAltura + 1);
+        int iHeightLeft = treeHeight(root -> ptrLeft, iHeight + 1);
+        int iHeightRight = treeHeight(root -> ptrRight, iHeight + 1);
 
-        return max(AltLeft, AltRight);
-
+        return max(iHeightLeft, iHeightRight);
     }
-    else return iAltura;
+    else
+    {
+        return iHeight;
+    } 
 }
-
 
 /**
  * Descobre o tamanho da árvore,
@@ -235,16 +258,19 @@ int alturaArvore(struct Node* root, int iAltura)
  * @param iTamanho Inteiro, tamanho da raiz, inicializado em 0
  * @return inteiro representado o tamanho da árvore.
  */
-int tamanhoArvore(struct Node* root, int iTamanho)
+int treeSize(struct Node* root, int iSize)
 {
     if (root != nullptr)
     {
-        int iTamLeft = tamanhoArvore(root->ptrLeft, iTamanho + 1);
-        int iTamRight = tamanhoArvore(root->ptrRight, iTamanho + 1);
+        int iSizeLeft = treeSize(root -> ptrLeft, iSize + 1);
+        int iSizeRight = treeSize(root -> ptrRight, iSize + 1);
 
-        return 1 + iTamLeft + iTamRight;
+        return 1 + iSizeLeft + iSizeRight;
     }
-    else return 0;
+    else
+    {
+        return 0;
+    } 
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H
