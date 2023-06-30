@@ -36,6 +36,13 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData);
 struct Node* searchNode(struct Node* sNode, int iData);
 struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2);
 
+/**
+ * Cria um nó
+ * 
+ * Cria um nó para uma árvore binaria
+ * 
+ * @param iData inteiro, valor armazenado no nó.
+*/
 struct Node* newNode(int iData)
 {
     struct Node* newNode = (struct Node*) malloc(sizeof(struct Node));
@@ -47,6 +54,16 @@ struct Node* newNode(int iData)
     return newNode;
 }
 
+/**
+ * Exibe a árvore em pré-ordem
+ * 
+ * Atravessa a árvore a exibindo por recusrsão. É exibido
+ * para cada nó, primeiro o seu próprio valor, depois o valor 
+ * do nó a esquerda e por último o valor nó a direita.
+ * 
+ * @param ptrStartingNode Ponteiro do nó raiz da árvore no
+ * inicio da recursão.
+*/
 void traversePreOrder(struct Node* ptrStartingNode)
 {
     if(ptrStartingNode != nullptr)
@@ -59,29 +76,16 @@ void traversePreOrder(struct Node* ptrStartingNode)
 }
 
 
-void traverseInOrder(struct Node* ptrStartingNode)
-{
-    if(ptrStartingNode != nullptr)
-    {
-        traverseInOrder(ptrStartingNode -> ptrLeft);
-
-        cout << " " << ptrStartingNode -> iPayload;
-
-        traverseInOrder(ptrStartingNode -> ptrRight);
-    }
-}
-
-void traversePosOrder(struct Node* ptrStartingNode)
-{
-    if(ptrStartingNode != nullptr)
-    {
-        traversePosOrder(ptrStartingNode -> ptrLeft);
-        traversePosOrder(ptrStartingNode -> ptrRight);
-
-        cout << " " << ptrStartingNode -> iPayload;
-    }
-}
-
+/**
+ * Cria uma árvore binária a partir da leitura de um arquivo .txt
+ * 
+ * Lê um arquivo .txt com 1 valor inteiro por linha e cria uma 
+ * árvore binária a partir desses valores
+ * 
+ * @param root Ponterio do nó raiz da árvore.
+ * @param strPath endereço do arquivo .txt a partir da pasta
+ * onde está o programa. Deve conter ".txt" no final
+*/
 struct Node* treeFromText(struct Node* root, string strPath)
 {
     FILE *archive;
@@ -116,6 +120,13 @@ struct Node* treeFromText(struct Node* root, string strPath)
 }
 
 
+/**
+ * Cria uma árvore binária a partir do input do usuário
+ * 
+ * @param root Ponterio do nó raiz da árvore.
+ * @param iSize número  de inputs a serem digitados pelo
+ * usuário
+*/
 struct Node* treeFromPrompt(struct Node* root, int iSize)
 {
     for(int i = 0; i < iSize; i++)
@@ -129,6 +140,16 @@ struct Node* treeFromPrompt(struct Node* root, int iSize)
 }
 
 
+/**
+ * Insere um nó na árvore
+ * 
+ * Insere uma folha na árvore binária a partir da recursão.
+ * O valor será inserido a esquerda do nó avaliado se for
+ * menor que ele ou a direita caso contrário.
+ * 
+ * @param sNode Ponterio do nó raiz da árvore.
+ * @param iData inteiro, valor a ser armazenado na árvore
+*/
 struct Node* insertNode(struct Node* sNode, int iData)
 {
     if(sNode == nullptr)
@@ -148,7 +169,14 @@ struct Node* insertNode(struct Node* sNode, int iData)
     return sNode;
 }
 
-struct Node* lesserLeaf(struct Node* sNode)  //lesserLeaf
+/**
+ * Acha o nó de menor valor a partir da entrada
+ * 
+ * @param sNode Ponterio de um nó da árvore.
+ * @return folha de menor valor, o nó mais a 
+ * esquerda possível.
+*/
+struct Node* lesserLeaf(struct Node* sNode)
 {
     struct Node* ptrCurrent = sNode;
 
@@ -195,10 +223,12 @@ struct Node* searchParentNode(struct Node* root, struct Node* sNode)
 /**
  * Troca a posição de dois nós na árvore
  * 
- * Não deve ser usado fora do delete, pois ele deordenaria a
- * árvore e o seu uso é baseado em uma árvore correta.
+ * Não deve ser usado fora do delete, pois existe o risco de
+ * deordenar a árvore.
  * 
- * 
+ * @param root Ponteiro do ponteiro do nó raiz da árvore
+ * @param sNode1 Ponteiro de um dos nós a ser trocado
+ * @param sNode2 Ponteiro de um dos nós a ser trocado
 */
 void swapNode(struct Node** root, struct Node* sNode1, struct Node* sNode2)
 {
@@ -284,8 +314,11 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
         {
             ptrTemp = sNode -> ptrLeft;
 
-            if(sNode == (*root)) (*root) = ptrTemp;
-    
+            if(sNode == (*root)) 
+            {
+                (*root) = ptrTemp;
+            }
+
             free(sNode);
 
             return ptrTemp;
@@ -294,7 +327,10 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
         {
             ptrTemp = sNode -> ptrRight;
 
-            if(sNode == (*root)) (*root) = ptrTemp;
+            if(sNode == (*root)) 
+            {
+                (*root) = ptrTemp;
+            }
 
             free(sNode);
 
@@ -309,6 +345,13 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
     }
 }
 
+/**
+ * Deleta uma árvore binaria
+ * 
+ * Usa a função deleteNode para deletar todos os nós
+ * 
+ * @param root Ponteiro do ponteiro do nó raiz da árvore
+*/
 void deleteTree(struct Node** root)
 {
     struct Node* ptrDel = (*root);

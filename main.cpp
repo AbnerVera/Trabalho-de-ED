@@ -19,12 +19,16 @@ int main()
     return 0;
 }
 
-
+/**
+ * Exibe as opções do menu
+ * 
+ * Escreve na tela as possíveis das operações que 
+ * podem ser realizadas para a escolha do usuário
+*/
 void printMenu()
 {
-    setlocale(LC_ALL, "Portuguese");
     cout << "01. Construir uma árvore binária de busca a partir de um arquivo texto\n"
-            "02. Construir uma árvore binária de busca a partir de dados digitados pelo usuário\n"
+            "02. Construir uma árvore binária de busca a partir de dados digitados\n"
             "03. Verificar a altura da árvore\n"
             "04. Verificar o tamanho da árvore\n"
             "05. Inserir um elemento\n"
@@ -33,7 +37,7 @@ void printMenu()
             "08. Verificar se a árvore é completa\n"
             "09. Verificar se a árvore é perfeita\n"
             "10. Exibir a árvore utilizando (BFS)\n"
-            "11. Exibir a árvore PreOrder\n"
+            "11. Exibir a árvore em pré-ordem\n"
             "12. Converter a árvore em uma lista e ordenar com Bubble Sort\n"
             "13. Converter a árvore em uma lista e ordenar com Selection Sort\n"
             "14. Converter a árvore em uma lista e ordenar com Insertion Sort\n"
@@ -42,34 +46,16 @@ void printMenu()
     cout << "\nDigite sua opção: ";
 }
 
-struct Node* teste(struct Node* ptrRoot)
-{
-    struct Node *root = ptrRoot;
 
-    cout << "*****PERIGO: TESTE, RISCO DE QUEBRAR A ÁRVORE***** \n\nSwap" << endl;
-    int iValor1, iValor2;
-    cout << "Digite o valor 1: " << endl;
-    cin >> iValor1;
-
-    struct Node* sNode1 = searchNode(root, iValor1);
-    cout << "Pais: pai do valor 1: " << sNode1->iPayload;
-    struct Node* sPai1 = searchParentNode(root, sNode1);
-    if (sPai1 != nullptr) cout << " = " << sPai1->iPayload << endl;
-
-    cout << "\nDigite o valor 2: " << endl;
-    cin >> iValor2;
-    
-    struct Node* sNode2 = searchNode(root, iValor2);    
-    struct Node* sPai2 = searchParentNode(root, sNode2);
-
-    cout << "      pai do valor 2: " << sNode2->iPayload;
-    if (sPai2 != nullptr) cout << " = " << sPai2->iPayload << endl;
-
-    swapNode(&root, sNode1, sNode2);
-
-    return  root;
-}
-
+/**
+ * Informa o tempo de duração de uma operação
+ * 
+ * Exibe na tela uma mensagem informando quando tempo durou uma
+ * operação, considerando o tempo inicial formecido e que a operção 
+ * foi finalizada logo antes da chamada dessa função
+ * 
+ * @param timeStart tempo em que a operação foi iniciada
+*/
 void tempo(std::chrono::_V2::system_clock::time_point timeStart)
 {
     auto timeStop = high_resolution_clock::now();
@@ -86,7 +72,9 @@ void tempo(std::chrono::_V2::system_clock::time_point timeStart)
     }
 }
 
-
+/**
+ * Cria o menu para operações com árvore binaria
+*/
 void menu() {
 
     int iOption;
@@ -166,11 +154,11 @@ void menu() {
 
                 if (ptrTemp != nullptr)
                 { 
-                    cout << "Endereço de " << ptrTemp -> iPayload  << ": " << ptrTemp;
+                    cout << "\nEndereço de " << ptrTemp -> iPayload  << ": " << ptrTemp;
                 }
                 else 
                 {
-                    cout << "Elemento não encontrado";
+                    cout << "\nElemento não encontrado";
                 }
 
                 break;
@@ -188,7 +176,7 @@ void menu() {
                 break;
 
             case 11:
-                cout << "11. Exibir a árvore PreOrder\n" << endl;
+                cout << "11. Exibir a árvore em pré-ordem\n" << endl;
 
                 traversePreOrder(root);
 
@@ -222,7 +210,6 @@ void menu() {
                 break;
 
             default:
-                root = teste(root);
                 break;
         }
 
