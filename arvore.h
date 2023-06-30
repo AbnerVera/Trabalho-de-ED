@@ -23,6 +23,7 @@ struct Node* treeFromPrompt(struct Node* root, int iSize);
 void traversePreOrder(struct Node*);
 void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
+void printLevelOrder(struct Node* root);
 void treeToLinkedList(struct Node*);
 void sortedInsert(struct Node**, struct Node*);
 void deleteLinkedList(struct Node**);
@@ -35,6 +36,10 @@ void shellSort(struct Node*);
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
 int lengthLinkedList(Node* sNode); 
+
+bool isCompleteTree(struct Node* root);
+bool checkPerfectTree(Node* sNode, int iNodeCount, int iExpectedNodeCount);
+bool isPerfectTree(struct Node* root);
 
 struct Node* insertNode(struct Node* sNode, int iData);
 struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData);
@@ -701,118 +706,136 @@ void printLinkedList(struct Node* sNode)
     cout << " nullptr " << endl;
 }
 
-bool isCompleteTree(Node* root) {
+bool isCompleteTree(struct Node* root) 
+{
     // árvore vazia é considerada completa
     if (root == nullptr)
+    {
         return true;
+    }
 
     queue<Node*> q;
     q.push(root);
 
-    bool flag = false; // flag que infica se um nó não completo foi encontrado
+    bool bFlag = false; // flag que infica se um nó não completo foi encontrado
 
     // percorrendo a árvore usando busca em largura
-    while (!q.empty()) {
-        Node* temp = q.front();
+    while (!q.empty()) 
+    {
+        struct Node* sTemp = q.front();
         q.pop();
 
         // um nó não completo já foi encontrado,mas um nó filho não é nullptr, a árvore não é completa
-        if (flag && (temp->ptrLeft != nullptr || temp->ptrRight != nullptr))
+        if (bFlag and (sTemp -> ptrLeft != nullptr or sTemp -> ptrRight != nullptr))
+        {
             return false;
+        }
 
         // o nó esquerdo não é nullptr
-        if (temp->ptrLeft != nullptr) {
-            q.push(temp->ptrLeft);
+        if (sTemp -> ptrLeft != nullptr) 
+        {
+            q.push(sTemp -> ptrLeft);
 
             // um nó não completo foi encontrado anteriormente, mas o nó atual não tem filho direito, a árvore não é completa
-            if (flag && temp->ptrRight == nullptr)
+            if (bFlag and sTemp -> ptrRight == nullptr)
+            {
                 return false;
+            }
         }
         // o nó direito não é nullptr
-        else if (temp->ptrRight != nullptr) {
+        else if (sTemp -> ptrRight != nullptr) 
+        {
             // A árvore não é completa
             return false;
         }
         // não entre em nenhum dos casos de não completa, então completa
         else
-            flag = true;
+        {
+            bFlag = true;
+        }
     }
-
+    
     return true;
 }
 
-// calcula a altura de uma árvore
-int getHeight(Node* root) {
-    if (root == nullptr)
-        return 0;
-    
-    int leftHeight = getHeight(root->ptrLeft);
-    int rightHeight = getHeight(root->ptrRight);
-    
-    return max(leftHeight, rightHeight) + 1;
-}
-
 // função auxiliar para verificar se a árvore é perfeita
-bool checkPerfectTree(Node* node, int nodeCount, int expectedNodeCount) {
+bool checkPerfectTree(Node* sNode, int iNodeCount, int iExpectedNodeCount) 
+{
     // nó é nullptr
-    if (node == nullptr)
+    if (sNode == nullptr)
+    {
         return true;
+    }
     
     // o número de nós já excede o número máximo esperado, a árvore não é perfeita
-    if (nodeCount >= expectedNodeCount)
+    if (iNodeCount >= iExpectedNodeCount)
+    {
         return false;
+    }
     
     // recursivamente a subárvore esquerda e a subárvore direita
-    return checkPerfectTree(node->ptrLeft, 2 * nodeCount + 1, expectedNodeCount) && 
-           checkPerfectTree(node->ptrRight, 2 * nodeCount + 2, expectedNodeCount);
+    return checkPerfectTree(sNode -> ptrLeft, 2 * iNodeCount + 1, iExpectedNodeCount) and 
+           checkPerfectTree(sNode -> ptrRight, 2 * iNodeCount + 2, iExpectedNodeCount);
 }
 
 
-bool isPerfectTree(Node* root) {
+bool isPerfectTree(struct Node* root) 
+{
     // árvore vazia é considerada perfeita
     if (root == nullptr)
+    {
         return true;
+    }
     
-    int height = getHeight(root);
+    int iHeight = treeHeight(root);
     
     // o número máximo de nós em uma árvore perfeita de altura 'height'
-    int expectedNodeCount = pow(2, height) - 1;
+    int iExpectedNodeCount = pow(2, iHeight) - 1;
     
-    return checkPerfectTree(root, 0, expectedNodeCount);
+    return checkPerfectTree(root, 0, iExpectedNodeCount);
 }
 
 // realiza a travessia em largura (BFS)
-void printLevelOrder(Node* root) {
+void printLevelOrder(struct Node* root) 
+{
     // a árvore está vazia
-    if (root == NULL) return;
+    if (root == nullptr)
+    { 
+        return;
+    }
 
     // fila vazia para o BFS
-    std::queue<Node*> q;
+    queue<Node*> q;
 
     q.push(root);
 
-    while (1) {
+    while (true) 
+    {
         // nós no nível atual
-        int nodeCount = q.size();
+        int iNodeCount = q.size();
         // não há nós no nível, encerra
-        if (nodeCount == 0) break;
+        if (iNodeCount == 0)
+        { 
+            break;
+        }
 
-        while (nodeCount > 0) {
+        while (iNodeCount > 0) 
+        {
             // remove o nó na frente da fila
-            Node* node = q.front();
+            struct Node* sNode = q.front();
             q.pop();
 
             // imprime o valor do nó
-            std::cout << node->iPayload << " ";
+            cout << sNode -> iPayload << " ";
 
-            if (node->ptrLeft != NULL) q.push(node->ptrLeft);
-            if (node->ptrRight != NULL) q.push(node->ptrRight);
+            if (sNode -> ptrLeft != nullptr) q.push(sNode -> ptrLeft);
+            if (sNode -> ptrRight != nullptr) q.push(sNode -> ptrRight);
 
-            nodeCount--;
+            iNodeCount--;
         }
 
         // novo nível (BFS)
-        std::cout << std::endl;
+        cout << endl;
     }
 }
 
