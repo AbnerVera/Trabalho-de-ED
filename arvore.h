@@ -544,4 +544,44 @@ void sortedInsert(struct Node **sNode, struct Node *sNew)
 
 }
 
+bool isCompleteTree(Node* root) {
+    // árvore vazia é considerada completa
+    if (root == nullptr)
+        return true;
+
+    queue<Node*> q;
+    q.push(root);
+
+    bool flag = false; // flag que infica se um nó não completo foi encontrado
+
+    // percorrendo a árvore usando busca em largura
+    while (!q.empty()) {
+        Node* temp = q.front();
+        q.pop();
+
+        // um nó não completo já foi encontrado,mas um nó filho não é nullptr, a árvore não é completa
+        if (flag && (temp->ptrLeft != nullptr || temp->ptrRight != nullptr))
+            return false;
+
+        // o nó esquerdo não é nullptr
+        if (temp->ptrLeft != nullptr) {
+            q.push(temp->ptrLeft);
+
+            // um nó não completo foi encontrado anteriormente, mas o nó atual não tem filho direito, a árvore não é completa
+            if (flag && temp->ptrRight == nullptr)
+                return false;
+        }
+        // o nó direito não é nullptr
+        else if (temp->ptrRight != nullptr) {
+            // A árvore não é completa
+            return false;
+        }
+        // não entre em nenhum dos casos de não completa, então completa
+        else
+            flag = true;
+    }
+
+    return true;
+}
+
 #endif //TRABALHO_DE_ED_ARVORE_H
