@@ -23,7 +23,7 @@ struct Node* treeFromPrompt(struct Node* root, int iSize);
 void traversePreOrder(struct Node*);
 void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
-void printLevelOrder(struct Node* root);
+void breadthFirstSearch(struct Node* root);
 void treeToLinkedList(struct Node*);
 void sortedInsert(struct Node**, struct Node*);
 void deleteLinkedList(struct Node**);
@@ -32,6 +32,7 @@ void bubbleSort(struct Node**);
 void selectSort(struct Node*);
 void insertSort(struct Node**);
 void shellSort(struct Node*);
+void enqueue(struct QueueNode** sQueueFront, struct QueueNode** sQueueRear, struct Node* sNode);
 
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
@@ -39,6 +40,7 @@ int lengthLinkedList(Node* sNode);
 
 bool isCompleteTree(struct Node* root, int iIndex, int iNumberNodes);
 bool isFullTree(struct Node* root);
+bool isQueueEmpty(struct QueueNode* sQueueFront);
 
 struct Node* insertNode(struct Node* sNode, int iData);
 struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData);
@@ -46,6 +48,11 @@ struct Node* searchNode(struct Node* sNode, int iData);
 struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2);
 struct Node* getNodeAtIndex(struct Node* sNode, int iIndex); 
 struct Node* linkedListToTree(struct Node* sNode);
+struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear);
+
+struct QueueNode* createQueueNode(struct Node* sNode);
+
+
 
 /**
  * Cria um nó
@@ -761,25 +768,12 @@ struct QueueNode
     int iQueueSize;
 };
 
-// int queueSize(struct QueueNode* sQueueNode)
-// {   
-//     int iSize = 0;
-
-//     while (sQueueNode != nullptr)
-//     {   
-//         iSize++;
-//         sQueueNode = sQueueNode -> ptrNext;
-//     }
-
-//     return iSize;
-// }
-
 struct QueueNode* createQueueNode(struct Node* sNode) 
 {
     struct QueueNode* sQueueNewNode = (struct QueueNode*) malloc(sizeof(struct QueueNode));
     sQueueNewNode -> sNode = sNode;
     sQueueNewNode -> ptrNext = nullptr;
-    sQueueNewNode -> iQueueSize = 1;
+    sQueueNewNode -> iQueueSize = 0;
 
     return sQueueNewNode;
 }
@@ -798,8 +792,8 @@ void enqueue(struct QueueNode** sQueueFront, struct QueueNode** sQueueRear, stru
         *sQueueRear = sQueueNewNode;
     }
 
-    // (*sQueueFront) -> iQueueSize = (*sQueueFront) -> iQueueSize + 1;
-    // (*sQueueRear) -> iQueueSize = (*sQueueRear) -> iQueueSize + 1;
+    (*sQueueFront) -> iQueueSize = (*sQueueFront) -> iQueueSize + 1;
+    (*sQueueRear) -> iQueueSize = (*sQueueRear) -> iQueueSize + 1;
 }
 
 struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear) 
@@ -819,8 +813,6 @@ struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear)
     }
 
     free(sQueueTemp);
-    //(*sQueueFront) -> iQueueSize = (*sQueueFront) -> iQueueSize - 1;
-    //(*sQueueRear) -> iQueueSize = (*sQueueRear) -> iQueueSize - 1;
     return sNode;
 }
 
@@ -843,12 +835,12 @@ void breadthFirstSearch(struct Node* root)
 
     while (!isQueueEmpty(sQueueFront)) 
     {   
-        //int iQueueSize = sQueueFront -> iQueueSize;
+        int iQueueSize = sQueueFront -> iQueueSize;
 
-        //for (int iCount = 0; iCount < iQueueSize; iCount++)
-        //{
+        for (int iCount = 1; iCount < iQueueSize; iCount++)
+        {
             struct Node* sNode = dequeue(&sQueueFront, &sQueueRear);  
-            std::cout << sNode -> iPayload << " ";  
+            cout << sNode -> iPayload << " ";  
 
             if (sNode -> ptrLeft != nullptr) 
             {
@@ -859,10 +851,9 @@ void breadthFirstSearch(struct Node* root)
             {
                 enqueue(&sQueueFront, &sQueueRear, sNode -> ptrRight); 
             }
-        //}
+        }
         cout << endl;
     }
 }
-
 
 #endif //TRABALHO_DE_ED_ARVORE_H
