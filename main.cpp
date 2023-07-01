@@ -27,6 +27,13 @@ int main()
 */
 void printMenu()
 {
+    system("COLOR 2");
+    cout << "_______0______________________________________________________________________________0________\n"
+            "______000____________________________________________________________________________000_______\n"
+            "_____00000__________________________________________________________________________00000______\n"
+            "____0000000________________________________________________________________________0000000_____\n"
+            "___000000000______________________________________________________________________000000000____\n"
+            "______| |____________________________________________________________________________| |_______\n" << endl;
     cout << "01. Construir uma árvore binária de busca a partir de um arquivo texto\n"
             "02. Construir uma árvore binária de busca a partir de dados digitados\n"
             "03. Verificar a altura da árvore\n"
@@ -58,9 +65,9 @@ void printMenu()
 */
 void tempo(std::chrono::_V2::system_clock::time_point timeStart)
 {
-    auto timeStop = high_resolution_clock::now();
-    auto timeDurationNano = duration_cast<nanoseconds>(timeStop - timeStart);
-    auto timeDurationSegundo = duration_cast<seconds>(timeStop - timeStart);
+    auto timeStop = high_resolution_clock::now();   // Tempo final da operação
+    auto timeDurationNano = duration_cast<nanoseconds>(timeStop - timeStart);   // Duração da operação em nanosegundos
+    auto timeDurationSegundo = duration_cast<seconds>(timeStop - timeStart);    // Duração da operação em segundos
 
     if (timeDurationSegundo.count() <= 0)
     { 
@@ -76,7 +83,6 @@ void tempo(std::chrono::_V2::system_clock::time_point timeStart)
  * Cria o menu para operações com árvore binaria
 */
 void menu() {
-
     int iOption;
     int iValue;
     struct Node* root = nullptr;
@@ -86,12 +92,12 @@ void menu() {
 
     while (iOption != -1){
 
-        system("cls");
+        system("cls");  // Limpa a tela
 
-        printMenu();
+        printMenu();    // Imprime as opções do menu
         cin >> iOption;
 
-        system("cls");
+        system("cls");  // Limpa a tela
 
         timeStart = high_resolution_clock::now();
 
