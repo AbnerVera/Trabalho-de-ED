@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <string>
-#include <queue>
 #include <cmath>
 
 using namespace std;
@@ -854,6 +853,30 @@ void breadthFirstSearch(struct Node* root)
         }
         cout << endl;
     }
+}
+
+void displayTree(struct Node* root, int iTab) 
+{
+    if (root == nullptr) 
+    {
+        return;
+    }
+
+    int iIdentation = 4;
+
+    iTab += iIdentation;
+
+    displayTree(root -> ptrRight, iTab);
+
+    cout << endl;
+    for (int iCount = iIdentation; iCount < iTab; iCount++) 
+    {
+        cout << " ";
+    }
+    
+    cout << root -> iPayload << endl;
+
+    displayTree(root -> ptrLeft, iTab);
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H
