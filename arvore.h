@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <string>
-#include <queue>
 #include <cmath>
 
 using namespace std;
@@ -23,7 +22,7 @@ struct Node* treeFromPrompt(struct Node* root, int iSize);
 void traversePreOrder(struct Node*);
 void traverseInOrder(struct Node*);
 void traversePosOrder(struct Node*);
-void printLevelOrder(struct Node* root);
+void breadthFirstSearch(struct Node* root);
 void treeToLinkedList(struct Node*);
 void sortedInsert(struct Node**, struct Node*);
 void deleteLinkedList(struct Node**);
@@ -32,14 +31,15 @@ void bubbleSort(struct Node**);
 void selectSort(struct Node*);
 void insertSort(struct Node**);
 void shellSort(struct Node*);
+void enqueue(struct QueueNode** sQueueFront, struct QueueNode** sQueueRear, struct Node* sNode);
 
 int treeHeight(struct Node* root, int iHeight = 0);
 int treeSize(struct Node* root,  int iSize = 0);
 int lengthLinkedList(Node* sNode); 
 
-bool isCompleteTree(struct Node* root);
-bool checkPerfectTree(Node* sNode, int iNodeCount, int iExpectedNodeCount);
-bool isPerfectTree(struct Node* root);
+bool isCompleteTree(struct Node* root, int iIndex, int iNumberNodes);
+bool isFullTree(struct Node* root);
+bool isQueueEmpty(struct QueueNode* sQueueFront);
 
 struct Node* insertNode(struct Node* sNode, int iData);
 struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData);
@@ -47,6 +47,11 @@ struct Node* searchNode(struct Node* sNode, int iData);
 struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2);
 struct Node* getNodeAtIndex(struct Node* sNode, int iIndex); 
 struct Node* linkedListToTree(struct Node* sNode);
+struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear);
+
+struct QueueNode* createQueueNode(struct Node* sNode);
+
+
 
 /**
  * Cria um nó
@@ -114,7 +119,7 @@ struct Node* treeFromText(struct Node* root, string strPath)
     char *cResult;
     int iValue;
 
-    for(int i = 1; !feof(archive); i++)
+    for(int iCount = 1; !feof(archive); iCount++)
     {
         // Lê uma linha (inclusive com o '\n')
         cResult = fgets(cRow, 100, archive);  // o 'fgets' lê até 99 caracteres ou até o '\n'
@@ -141,9 +146,12 @@ struct Node* treeFromText(struct Node* root, string strPath)
 */
 struct Node* treeFromPrompt(struct Node* root, int iSize)
 {
-    for(int i = 0; i < iSize; i++)  // O usuário digita os valores e eles são inseridos
+    for(int iCount = 0; iCount < iSize; iCount++)
+
+      // O usuário digita os valores e eles são inseridos
     {
         int iValue;
+        cout << "Insira o Valor de nº: " << iCount << endl;
         cin >> iValue;
         root = insertNode(root, iValue);
     }
@@ -728,137 +736,171 @@ void printLinkedList(struct Node* sNode)
     cout << " nullptr " << endl;
 }
 
-bool isCompleteTree(struct Node* root) 
+int countNodes(struct Node* root)
+{
+    if (root == nullptr)
+    {
+        return 0;
+    }
+
+    return (1 + countNodes(root -> ptrLeft) + countNodes(root -> ptrRight));
+}
+
+bool isCompleteTree(struct Node* root, int iIndex, int iNumberNodes) 
 {
     // árvore vazia é considerada completa
     if (root == nullptr)
     {
         return true;
     }
-
-    queue<Node*> q;
-    q.push(root);
-
-    bool bFlag = false; // flag que infica se um nó não completo foi encontrado
-
-    // percorrendo a árvore usando busca em largura
-    while (!q.empty()) 
-    {
-        struct Node* sTemp = q.front();
-        q.pop();
-
-        // um nó não completo já foi encontrado,mas um nó filho não é nullptr, a árvore não é completa
-        if (bFlag and (sTemp -> ptrLeft != nullptr or sTemp -> ptrRight != nullptr))
-        {
-            return false;
-        }
-
-        // o nó esquerdo não é nullptr
-        if (sTemp -> ptrLeft != nullptr) 
-        {
-            q.push(sTemp -> ptrLeft);
-
-            // um nó não completo foi encontrado anteriormente, mas o nó atual não tem filho direito, a árvore não é completa
-            if (bFlag and sTemp -> ptrRight == nullptr)
-            {
-                return false;
-            }
-        }
-        // o nó direito não é nullptr
-        else if (sTemp -> ptrRight != nullptr) 
-        {
-            // A árvore não é completa
-            return false;
-        }
-        // não entre em nenhum dos casos de não completa, então completa
-        else
-        {
-            bFlag = true;
-        }
-    }
-    
-    return true;
-}
-
-// função auxiliar para verificar se a árvore é perfeita
-bool checkPerfectTree(Node* sNode, int iNodeCount, int iExpectedNodeCount) 
-{
-    // nó é nullptr
-    if (sNode == nullptr)
-    {
-        return true;
-    }
-    
-    // o número de nós já excede o número máximo esperado, a árvore não é perfeita
-    if (iNodeCount >= iExpectedNodeCount)
+ 
+    if (iIndex >= iNumberNodes)
     {
         return false;
     }
-    
-    // recursivamente a subárvore esquerda e a subárvore direita
-    return checkPerfectTree(sNode -> ptrLeft, 2 * iNodeCount + 1, iExpectedNodeCount) and 
-           checkPerfectTree(sNode -> ptrRight, 2 * iNodeCount + 2, iExpectedNodeCount);
+ 
+    return (isCompleteTree(root->ptrLeft, 2*iIndex + 1, iNumberNodes) and
+            isCompleteTree(root->ptrRight, 2*iIndex + 2, iNumberNodes));
 }
 
-
-bool isPerfectTree(struct Node* root) 
+// função auxiliar para verificar se a árvore é perfeita (ou full)
+bool isFullTree(struct Node* root) 
 {
-    // árvore vazia é considerada perfeita
     if (root == nullptr)
     {
         return true;
     }
-    
-    int iHeight = treeHeight(root);
-    
-    // o número máximo de nós em uma árvore perfeita de altura 'height'
-    int iExpectedNodeCount = pow(2, iHeight) - 1;
-    
-    return checkPerfectTree(root, 0, iExpectedNodeCount);
+  
+    if (root -> ptrLeft == nullptr and root -> ptrRight == nullptr)
+    {
+        return true;
+    }
+  
+    if ((root -> ptrLeft) and (root -> ptrRight))
+    {
+        return (isFullTree(root -> ptrLeft) and isFullTree(root -> ptrRight));
+    }
+  
+    return false;
 }
 
-// realiza a travessia em largura (BFS)
-void printLevelOrder(struct Node* root) 
+struct QueueNode 
 {
-    // a árvore está vazia
-    if (root == nullptr)
-    { 
+    struct Node* sNode;
+    struct QueueNode* ptrNext;
+    int iQueueSize;
+};
+
+struct QueueNode* createQueueNode(struct Node* sNode) 
+{
+    struct QueueNode* sQueueNewNode = (struct QueueNode*) malloc(sizeof(struct QueueNode));
+    sQueueNewNode -> sNode = sNode;
+    sQueueNewNode -> ptrNext = nullptr;
+    sQueueNewNode -> iQueueSize = 0;
+
+    return sQueueNewNode;
+}
+
+void enqueue(struct QueueNode** sQueueFront, struct QueueNode** sQueueRear, struct Node* sNode) 
+{
+    struct QueueNode* sQueueNewNode = createQueueNode(sNode);
+
+    if (*sQueueFront == nullptr) 
+    {
+        *sQueueFront = *sQueueRear = sQueueNewNode;
+    } 
+    else 
+    {
+        (*sQueueRear) -> ptrNext = sQueueNewNode;
+        *sQueueRear = sQueueNewNode;
+    }
+
+    (*sQueueFront) -> iQueueSize = (*sQueueFront) -> iQueueSize + 1;
+    (*sQueueRear) -> iQueueSize = (*sQueueRear) -> iQueueSize + 1;
+}
+
+struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear) 
+{
+    if (*sQueueFront == nullptr) 
+    {
+        return nullptr;
+    }
+
+    struct QueueNode* sQueueTemp = *sQueueFront;
+    struct Node* sNode = sQueueTemp -> sNode;
+
+    *sQueueFront = (*sQueueFront) -> ptrNext;
+    if (*sQueueFront == nullptr) 
+    {
+        *sQueueRear = nullptr;
+    }
+
+    free(sQueueTemp);
+    return sNode;
+}
+
+bool isQueueEmpty(struct QueueNode* sQueueFront) 
+{
+    return sQueueFront == nullptr;
+}
+
+void breadthFirstSearch(struct Node* root) 
+{
+    if (root == nullptr) 
+    {
         return;
     }
 
-    // fila vazia para o BFS
-    queue<Node*> q;
+    struct QueueNode* sQueueFront = nullptr;
+    struct QueueNode* sQueueRear = nullptr;
 
-    q.push(root);
+    enqueue(&sQueueFront, &sQueueRear, root);  
 
-    while (true) 
-    {
-        // nós no nível atual
-        int iNodeCount = q.size();
-        // não há nós no nível, encerra
-        if (iNodeCount == 0)
-        { 
-            break;
-        }
+    while (!isQueueEmpty(sQueueFront)) 
+    {   
+        int iQueueSize = sQueueFront -> iQueueSize;
 
-        while (iNodeCount > 0) 
+        for (int iCount = 1; iCount < iQueueSize; iCount++)
         {
-            // remove o nó na frente da fila
-            struct Node* sNode = q.front();
-            q.pop();
+            struct Node* sNode = dequeue(&sQueueFront, &sQueueRear);  
+            cout << sNode -> iPayload << " ";  
 
-            // imprime o valor do nó
-            cout << sNode -> iPayload << " ";
+            if (sNode -> ptrLeft != nullptr) 
+            {
+                enqueue(&sQueueFront, &sQueueRear, sNode -> ptrLeft);  
+            }
 
-            if (sNode -> ptrLeft != nullptr) q.push(sNode -> ptrLeft);
-            if (sNode -> ptrRight != nullptr) q.push(sNode -> ptrRight);
-
-            iNodeCount--;
+            if (sNode -> ptrRight != nullptr) 
+            {
+                enqueue(&sQueueFront, &sQueueRear, sNode -> ptrRight); 
+            }
         }
-
-        // novo nível (BFS)
         cout << endl;
     }
+}
+
+void displayTree(struct Node* root, int iTab) 
+{
+    if (root == nullptr) 
+    {
+        return;
+    }
+
+    int iIdentation = 4;
+
+    iTab += iIdentation;
+
+    displayTree(root -> ptrRight, iTab);
+
+    cout << endl;
+    for (int iCount = iIdentation; iCount < iTab; iCount++) 
+    {
+        cout << " ";
+    }
+    
+    cout << root -> iPayload << endl;
+
+    displayTree(root -> ptrLeft, iTab);
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H

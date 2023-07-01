@@ -85,6 +85,7 @@ void tempo(std::chrono::_V2::system_clock::time_point timeStart)
 void menu() {
     int iOption;
     int iValue;
+    int iNumberNodes;
     struct Node* root = nullptr;
     struct Node* ptrTemp = nullptr;
     string strPath;
@@ -171,7 +172,8 @@ void menu() {
 
             case 8:
                 cout << "08. Verificar se a árvore é completa\n" << endl;
-                if (isCompleteTree(root))
+                iNumberNodes = countNodes(root);
+                if (isCompleteTree(root, 0, iNumberNodes))
                     cout << "A arvore e completa." << endl;
                 else
                     cout << "A arvore nao e completa." << endl;
@@ -179,7 +181,7 @@ void menu() {
 
             case 9:
                 cout << "09. Verificar se a árvore é perfeita\n" << endl;
-                if (isPerfectTree(root))
+                if (isFullTree(root))
                     cout << "A arvore e perfeita." << endl;
                 else
                     cout << "A arvore nao e perfeita." << endl;
@@ -187,7 +189,8 @@ void menu() {
 
             case 10:
                 cout << "10. Exibir a árvore utilizando (BFS)\n" << endl;
-                printLevelOrder(root);
+                breadthFirstSearch(root);
+                displayTree(root, 4);
                 break;
 
             case 11:
