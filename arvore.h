@@ -85,10 +85,10 @@ void traversePreOrder(struct Node* ptrStartingNode)
 {
     if(ptrStartingNode != nullptr)
     {
-        cout << " " << ptrStartingNode -> iPayload;
+        cout << " " << ptrStartingNode -> iPayload;     // O nó primeiro se imprime
 
-        traversePreOrder(ptrStartingNode -> ptrLeft);
-        traversePreOrder(ptrStartingNode -> ptrRight);
+        traversePreOrder(ptrStartingNode -> ptrLeft);   // Depois o nó a esquerda
+        traversePreOrder(ptrStartingNode -> ptrRight);  // Depois o nó a direita
     }
 }
 
@@ -109,7 +109,7 @@ struct Node* treeFromText(struct Node* root, string strPath)
     
     archive = fopen(strPath.c_str(), "rt");
 
-    if (archive == nullptr)
+    if (archive == nullptr) // Arquivo não foi encontrado
     {
         cout << "Erro ao encontrar o arquivo";
         return nullptr;
@@ -147,6 +147,8 @@ struct Node* treeFromText(struct Node* root, string strPath)
 struct Node* treeFromPrompt(struct Node* root, int iSize)
 {
     for(int iCount = 0; iCount < iSize; iCount++)
+
+      // O usuário digita os valores e eles são inseridos
     {
         int iValue;
         cout << "Insira o Valor de nº: " << iCount << endl;
@@ -170,16 +172,16 @@ struct Node* treeFromPrompt(struct Node* root, int iSize)
 */
 struct Node* insertNode(struct Node* sNode, int iData)
 {
-    if(sNode == nullptr)
+    if(sNode == nullptr)    // Encontrada a posição para o novo nó
     {
         return newNode(iData);
     }
 
-    if(iData < sNode -> iPayload)
+    if(iData < sNode -> iPayload)   // A possição para o novo nó está a esquerda
     {
         sNode -> ptrLeft = insertNode(sNode -> ptrLeft, iData);
     }
-    else
+    else    // A possição para o novo nó está a direita
     {
         sNode -> ptrRight = insertNode(sNode -> ptrRight, iData);
     }
@@ -198,7 +200,7 @@ struct Node* lesserLeaf(struct Node* sNode)
 {
     struct Node* ptrCurrent = sNode;
 
-    while (ptrCurrent && ptrCurrent->ptrLeft != nullptr)
+    while (ptrCurrent && ptrCurrent->ptrLeft != nullptr)    // Indo mais a esquerda possível
     {   
         ptrCurrent = ptrCurrent->ptrLeft;
     }
@@ -219,20 +221,20 @@ struct Node* lesserLeaf(struct Node* sNode)
 */
 struct Node* searchParentNode(struct Node* root, struct Node* sNode)
 {
-    if (root == nullptr || root == sNode)
+    if (root == nullptr || root == sNode)   // O nó pai não foi encontrado
     {
         return nullptr;
     }
 
-    if (sNode == root -> ptrLeft || sNode == root -> ptrRight)
+    if (sNode == root -> ptrLeft || sNode == root -> ptrRight)  // O nó pai foi encontrado
     {
         return root;
     }
-    else if (sNode -> iPayload < root -> iPayload)
+    else if (sNode -> iPayload < root -> iPayload)  // O nó pode estar a esquerda
     {
         return searchParentNode(root -> ptrLeft, sNode);
     }
-    else
+    else    // O nó pode estar a direita
     {
         return searchParentNode(root -> ptrRight, sNode);
     }
@@ -258,7 +260,7 @@ void swapNode(struct Node** root, struct Node* sNode1, struct Node* sNode2)
     struct Node* parentNode1 = searchParentNode((*root), sNode1);
     struct Node* parentNode2 = searchParentNode((*root), sNode2);
 
-
+    // Mudar os indicadores dos nós pais
     if(sNode1 == (*root))       // Caso o nó 1 seja a raiz
     {
         if(parentNode2 -> iPayload >= sNode2 -> iPayload) parentNode2 -> ptrLeft = sNode1;
@@ -311,20 +313,20 @@ void swapNode(struct Node** root, struct Node* sNode1, struct Node* sNode2)
 */
 struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
 {
-    if (sNode == nullptr)
+    if (sNode == nullptr)   // O nó não foi encontrado
     { 
         return sNode;
     }
 
-    if (iData < sNode -> iPayload) 
+    if (iData < sNode -> iPayload)  // O nó pode estar a esquerda
     {   
         sNode -> ptrLeft = deleteNode(root, sNode -> ptrLeft, iData);
     }
-    else if (iData > sNode -> iPayload) 
+    else if (iData > sNode -> iPayload) // O nó pode estar a direita
     {
         sNode -> ptrRight = deleteNode(root, sNode -> ptrRight, iData);
     }
-    else
+    else    // O nó foi encontrado
     {
         struct Node* ptrTemp = nullptr;
 
@@ -332,12 +334,12 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
         {
             ptrTemp = sNode -> ptrLeft;
 
-            if(sNode == (*root)) 
+            if(sNode == (*root))    // Se o nó a ser removido for a raiz
             {
                 (*root) = ptrTemp;
             }
 
-            free(sNode);
+            free(sNode);    // Libera o espço na memória
 
             return ptrTemp;
         }
@@ -345,21 +347,21 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
         {
             ptrTemp = sNode -> ptrRight;
 
-            if(sNode == (*root)) 
+            if(sNode == (*root))    // Se o nó a ser removido for a raiz
             {
                 (*root) = ptrTemp;
             }
 
-            free(sNode);
+            free(sNode);    // Libera o espço na memória
 
             return ptrTemp;
         }
 
-        ptrTemp = lesserLeaf(sNode -> ptrRight);
+        ptrTemp = lesserLeaf(sNode -> ptrRight);    // Acha a menor folha a direita do nó que será removido
 
-        swapNode(root, sNode, ptrTemp);
+        swapNode(root, sNode, ptrTemp); // Troca a menor folha a direita com o valor a ser deletado
 
-        ptrTemp -> ptrRight = deleteNode(root, ptrTemp -> ptrRight, sNode -> iPayload);
+        ptrTemp -> ptrRight = deleteNode(root, ptrTemp -> ptrRight, sNode -> iPayload); // Exclui o valor a ser deletado, agora na posição da menor folha
     }
 }
 
@@ -373,7 +375,7 @@ struct Node* deleteNode(struct Node** root, struct Node* sNode, int iData)
 void deleteTree(struct Node** root)
 {
     struct Node* ptrDel = (*root);
-    while(ptrDel != nullptr)
+    while(ptrDel != nullptr)    // loop enquanto existir algum nó
     {
         ptrDel = deleteNode(root, ptrDel, ptrDel -> iPayload);
     }
@@ -395,20 +397,20 @@ void deleteTree(struct Node** root)
 */
 struct Node* searchNode(struct Node* sNode, int iData)
 {
-    if (sNode == nullptr)
+    if (sNode == nullptr)   // O nó não foi encontrado
     {
         return nullptr;
     }
 
-    if (iData == sNode -> iPayload)
+    if (iData == sNode -> iPayload) // O nó foi encontrado
     {
         return sNode;
     }
-    else if (iData < sNode -> iPayload)
+    else if (iData < sNode -> iPayload) // O nó pode estar a esquerda
     {
         return searchNode(sNode -> ptrLeft, iData);
     }
-    else
+    else    // O nó pode estar a direita
     {
         return searchNode(sNode -> ptrRight, iData);
     }
@@ -431,10 +433,10 @@ int treeHeight(struct Node* root, int iHeight)
 {
     if (root != nullptr)
     {
-        int iHeightLeft = treeHeight(root -> ptrLeft, iHeight + 1);
-        int iHeightRight = treeHeight(root -> ptrRight, iHeight + 1);
+        int iHeightLeft = treeHeight(root -> ptrLeft, iHeight + 1);     // Confere a altura do galho a esquerda
+        int iHeightRight = treeHeight(root -> ptrRight, iHeight + 1);   // Confere a altura do galho a direita
 
-        return max(iHeightLeft, iHeightRight);
+        return max(iHeightLeft, iHeightRight);  // A altura máxima é a altura da árvore
     }
     else
     {
@@ -456,8 +458,8 @@ int treeSize(struct Node* root, int iSize)
 {
     if (root != nullptr)
     {
-        int iSizeLeft = treeSize(root -> ptrLeft, iSize + 1);
-        int iSizeRight = treeSize(root -> ptrRight, iSize + 1);
+        int iSizeLeft = treeSize(root -> ptrLeft, iSize + 1);   // Conta o número de nós a esquerda
+        int iSizeRight = treeSize(root -> ptrRight, iSize + 1); // Conta o número de nós a direita
 
         return 1 + iSizeLeft + iSizeRight;
     }
@@ -471,8 +473,10 @@ void treeToLinkedList(struct Node* root)
 {
     while (root != nullptr) 
     {
+        // se o nó tem um filho à esquerda
         if (root -> ptrLeft != nullptr) 
         {
+            // nó mais à direita do filho à esquerda
             struct Node* ptrCurrent = root -> ptrLeft;
             
             while (ptrCurrent -> ptrRight) 
@@ -480,8 +484,10 @@ void treeToLinkedList(struct Node* root)
                 ptrCurrent = ptrCurrent -> ptrRight;
             }
 
+            // anexa o filho à direita do nó à direita do nó mais à direita do filho à esquerda
             ptrCurrent -> ptrRight = root -> ptrRight;
 
+            // faz o nó apontar para o filho à esquerda como filho à direita
             root -> ptrRight = root -> ptrLeft;
             root -> ptrLeft = nullptr;
         }
@@ -522,12 +528,14 @@ void bubbleSort(struct Node** sNode)
 
         printLinkedList(*sNode);
 
+        // compara cada par de nós adjacentes
         for (int iInnerLoop = 0; iInnerLoop < iLength - iOuterLoop - 1; iInnerLoop++)
         {   
 
             struct Node* sNode1 = *sNodeTemp;
             struct Node* sNode2 = sNode1 -> ptrRight;
   
+            // se o valor do nó atual é maior que o próximo, troca os valores
             if (sNode1 -> iPayload > sNode2 -> iPayload) 
             {
                 *sNodeTemp = swapNodeValues(sNode1, sNode2);
@@ -537,6 +545,7 @@ void bubbleSort(struct Node** sNode)
             sNodeTemp = &(*sNodeTemp) -> ptrRight;
         }
   
+        // se não houve trocas, a lista está ordenada
         if (bSwap == false)
         {
             break;
@@ -556,6 +565,7 @@ void selectSort(struct Node* sNode)
         struct Node* sMin = sTemp;
         struct Node* sNext = sTemp -> ptrRight;
   
+        // encontra o nó com o menor valor na lista restante
         while (sNext != nullptr) 
         {
             if (sMin -> iPayload > sNext -> iPayload)
@@ -569,6 +579,7 @@ void selectSort(struct Node* sNode)
         cout << "   Iteração " << iCount << endl;
         cout << "   Valor a ser comparado: " << sMin -> iPayload << endl;
         
+        // troca os valores do nó atual e do nó com o menor valor
         int iValue = sTemp -> iPayload;
 
         sTemp -> iPayload = sMin -> iPayload;
@@ -653,18 +664,22 @@ void shellSort(struct Node* sNode)
 {
     int iLength = lengthLinkedList(sNode);
     
+    // ordenação começa com um grande intervalo e vai diminuindo
     for (int iGap = iLength / 2; iGap > 0; iGap /= 2) 
     {
         for (int iOuterLoop = iGap; iOuterLoop < iLength; iOuterLoop++) 
         {
+            // salva o valor do nó atual
             int iTemp = getNodeAtIndex(sNode, iOuterLoop) -> iPayload;
             int iInnerLoop;
             
+            // move os elementos da lista que são maiores que o valor salvo para frente no intervalo dado
             for (iInnerLoop = iOuterLoop; iInnerLoop >= iGap and getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload > iTemp; iInnerLoop -= iGap) 
             {
                 getNodeAtIndex(sNode, iInnerLoop) -> iPayload = getNodeAtIndex(sNode, iInnerLoop - iGap) -> iPayload;
             }
 
+            // valor salvo na posição correta dentro do intervalo
             getNodeAtIndex(sNode, iInnerLoop) -> iPayload = iTemp;
         }
     }
@@ -678,8 +693,11 @@ void deleteLinkedList(struct Node** sNode)
  
    while (ptrCurrent != nullptr)
    {
+       // salva o próximo nó
        sNext = ptrCurrent -> ptrRight;
+       // deleta o nó atual
        free(ptrCurrent);
+       // vai para o próximo nó
        ptrCurrent = sNext;
    }
 
@@ -692,10 +710,13 @@ struct Node* linkedListToTree(struct Node* sNode)
 
     while (sNode != nullptr)
     {   
+        // insere cada elemento da lista na árvore
         sTree = insertNode(sTree, sNode -> iPayload);
+        // vai para o próximo elemento da lista
         sNode = sNode -> ptrRight;
     }
 
+    // deleta a lista ligada
     deleteLinkedList(&sNode); 
     
     return sTree;
@@ -705,10 +726,13 @@ void printLinkedList(struct Node* sNode)
 {
     while (sNode != nullptr)
     {
+        // imprime o valor do nó
         cout << sNode -> iPayload << " -> ";
+        // vai para o próximo nó
         sNode = sNode -> ptrRight;
     }
 
+    // imprime nulo ao fim da lista
     cout << " nullptr " << endl;
 }
 
