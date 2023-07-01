@@ -183,7 +183,7 @@ void menu() {
 
             case 10:
                 cout << "10. Exibir a árvore utilizando (BFS)\n" << endl;
-                printLevelOrder(root);
+                breadthFirstSearch(root) ;
                 break;
 
             case 11:

@@ -754,55 +754,115 @@ bool isFullTree(struct Node* root)
     return false;
 }
 
-// realiza a travessia em largura (BFS)
-void printLevelOrder(struct Node* root) 
+struct QueueNode 
 {
-    // a árvore está vazia
-    if (root == nullptr)
-    { 
+    struct Node* sNode;
+    struct QueueNode* ptrNext;
+    int iQueueSize;
+};
+
+// int queueSize(struct QueueNode* sQueueNode)
+// {   
+//     int iSize = 0;
+
+//     while (sQueueNode != nullptr)
+//     {   
+//         iSize++;
+//         sQueueNode = sQueueNode -> ptrNext;
+//     }
+
+//     return iSize;
+// }
+
+struct QueueNode* createQueueNode(struct Node* sNode) 
+{
+    struct QueueNode* sQueueNewNode = (struct QueueNode*) malloc(sizeof(struct QueueNode));
+    sQueueNewNode -> sNode = sNode;
+    sQueueNewNode -> ptrNext = nullptr;
+    sQueueNewNode -> iQueueSize = 1;
+
+    return sQueueNewNode;
+}
+
+void enqueue(struct QueueNode** sQueueFront, struct QueueNode** sQueueRear, struct Node* sNode) 
+{
+    struct QueueNode* sQueueNewNode = createQueueNode(sNode);
+
+    if (*sQueueFront == nullptr) 
+    {
+        *sQueueFront = *sQueueRear = sQueueNewNode;
+    } 
+    else 
+    {
+        (*sQueueRear) -> ptrNext = sQueueNewNode;
+        *sQueueRear = sQueueNewNode;
+    }
+
+    // (*sQueueFront) -> iQueueSize = (*sQueueFront) -> iQueueSize + 1;
+    // (*sQueueRear) -> iQueueSize = (*sQueueRear) -> iQueueSize + 1;
+}
+
+struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear) 
+{
+    if (*sQueueFront == nullptr) 
+    {
+        return nullptr;
+    }
+
+    struct QueueNode* sQueueTemp = *sQueueFront;
+    struct Node* sNode = sQueueTemp -> sNode;
+
+    *sQueueFront = (*sQueueFront) -> ptrNext;
+    if (*sQueueFront == nullptr) 
+    {
+        *sQueueRear = nullptr;
+    }
+
+    free(sQueueTemp);
+    //(*sQueueFront) -> iQueueSize = (*sQueueFront) -> iQueueSize - 1;
+    //(*sQueueRear) -> iQueueSize = (*sQueueRear) -> iQueueSize - 1;
+    return sNode;
+}
+
+bool isQueueEmpty(struct QueueNode* sQueueFront) 
+{
+    return sQueueFront == nullptr;
+}
+
+void breadthFirstSearch(struct Node* root) 
+{
+    if (root == nullptr) 
+    {
         return;
     }
 
-    // fila vazia para o BFS
-    queue<Node*> q;
+    struct QueueNode* sQueueFront = nullptr;
+    struct QueueNode* sQueueRear = nullptr;
 
-    q.push(root);
+    enqueue(&sQueueFront, &sQueueRear, root);  
 
-    while (true) 
-    {
-        // nós no nível atual
-        int iNodeCount = q.size();
-        // não há nós no nível, encerra
-        if (iNodeCount == 0)
-        { 
-            break;
-        }
+    while (!isQueueEmpty(sQueueFront)) 
+    {   
+        //int iQueueSize = sQueueFront -> iQueueSize;
 
-        while (iNodeCount > 0) 
-        {
-            // remove o nó na frente da fila
-            struct Node* sNode = q.front();
-            q.pop();
+        //for (int iCount = 0; iCount < iQueueSize; iCount++)
+        //{
+            struct Node* sNode = dequeue(&sQueueFront, &sQueueRear);  
+            std::cout << sNode -> iPayload << " ";  
 
-            // imprime o valor do nó
-            cout << sNode -> iPayload << " ";
-
-            if (sNode -> ptrLeft != nullptr)
-            { 
-                q.push(sNode -> ptrLeft);
-            }
-
-            if (sNode -> ptrRight != nullptr)
+            if (sNode -> ptrLeft != nullptr) 
             {
-                q.push(sNode -> ptrRight);
+                enqueue(&sQueueFront, &sQueueRear, sNode -> ptrLeft);  
             }
 
-            iNodeCount--;
-        }
-
-        // novo nível (BFS)
+            if (sNode -> ptrRight != nullptr) 
+            {
+                enqueue(&sQueueFront, &sQueueRear, sNode -> ptrRight); 
+            }
+        //}
         cout << endl;
     }
 }
+
 
 #endif //TRABALHO_DE_ED_ARVORE_H
