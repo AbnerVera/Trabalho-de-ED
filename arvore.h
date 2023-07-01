@@ -467,6 +467,14 @@ int treeSize(struct Node* root, int iSize)
     } 
 }
 
+/**
+ * Converte uma árvore binária para uma lista encadeada
+ * 
+ * Usa a função treeToLinkedList para transformar a árvore binária
+ * em uma lista encadeada
+ * 
+ * @param root Ponteiro do nó raiz da árvore
+*/
 void treeToLinkedList(struct Node* root)
 {
     while (root != nullptr) 
@@ -494,6 +502,15 @@ void treeToLinkedList(struct Node* root)
     }
 }
 
+/**
+ * Troque dois Nós de uma Lista Encadeada de Lugar
+ * 
+ * Função auxiliar do BubbleSort para realizar troca de posição entre nós
+ * 
+ * @param sNode1 ponteiro ao primeiro nó
+ * @param sNode2 ponteiro ao segundo nó
+ * @return além de trocar os nós, retorna o segundo nó trocado
+*/
 struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2) 
 {
   struct Node* sNodeTemp = sNode2 -> ptrRight;
@@ -504,6 +521,12 @@ struct Node* swapNodeValues(struct Node* sNode1, struct Node* sNode2)
   return sNode2;
 }
 
+/**
+ * Algoritmo de Ordenação BubbleSort
+ * 
+ * Função responsável por executar o algoritmo de ordenação BubbleSort
+ * @param sNode ponteiro do ponteiro de uma lista encadeada
+*/
 void bubbleSort(struct Node** sNode)
 {   
     struct Node** sNodeTemp = sNode;
@@ -551,6 +574,12 @@ void bubbleSort(struct Node** sNode)
     }
 }
 
+/**
+ * Algoritmo de Ordenação SelectSort
+ * 
+ * Função responsável por executar o algoritmo de ordenação SelectSort
+ * @param sNode ponteiro de uma lista encadeada
+*/
 void selectSort(struct Node* sNode)
 {
     struct Node* sTemp = sNode;
@@ -589,6 +618,12 @@ void selectSort(struct Node* sNode)
     }
 }
 
+/**
+ * Algoritmo de Ordenação InsertSort
+ * 
+ * Função responsável por executar o algoritmo de ordenação InsertSort
+ * @param sNode ponteiro de um ponteiro de uma lista encadeada
+*/
 void insertSort(struct Node** sNode)
 {
     struct Node* sSorted = nullptr;
@@ -606,6 +641,13 @@ void insertSort(struct Node** sNode)
     *sNode = sSorted;
 }
 
+/**
+ * Função auxiliar para inserção ordenada do algoritmo InsertSort
+ * 
+ * Função auxiliar responsável por inserir um nó na lista encadeada de forma ordenada
+ * @param sNode ponteiro de um ponteiro de uma lista encadeada
+ * @param sNew ponteiro de um nó de uma lista encadeada
+*/
 void sortedInsert(struct Node **sNode, struct Node *sNew)
 {
     struct Node *ptrCurrent = nullptr;
@@ -628,6 +670,13 @@ void sortedInsert(struct Node **sNode, struct Node *sNew)
     }
 }
 
+/**
+ * Função auxiliar para obter tamanho de uma lista encadeada do algoritmo ShellSort
+ * 
+ * Função auxiliar responsável por obter o número de elementos de uma lista encadeada
+ * @param sNode ponteiro de uma lista encadeada
+ * @return tamanho de uma lista encadeada
+*/
 int lengthLinkedList(struct Node* sNode) 
 {
     int iLength = 0;
@@ -641,6 +690,15 @@ int lengthLinkedList(struct Node* sNode)
     return iLength;
 }
 
+/**
+ * Função auxiliar para obter o nó de uma lista encadeada a partir
+ * de um indíce no algoritmo ShellSort
+ * 
+ * Função auxiliar responsável por obter o nó dado um indíce 
+ * @param sNode ponteiro de uma lista encadeada
+ * @param iIndex inteiro representando o índice de uma lista encadeada
+ * @return nó na posição do índice dado
+*/
 struct Node* getNodeAtIndex(struct Node* sNode, int iIndex) 
 {
     int iCount = 0;
@@ -658,6 +716,12 @@ struct Node* getNodeAtIndex(struct Node* sNode, int iIndex)
     return nullptr;
 }
 
+/**
+ * Algoritmo de Ordenação ShellSort
+ * 
+ * Função responsável por executar o algoritmo de ordenação ShellSort
+ * @param sNode ponteiro uma lista encadeada
+*/
 void shellSort(struct Node* sNode) 
 {
     int iLength = lengthLinkedList(sNode);
@@ -684,6 +748,12 @@ void shellSort(struct Node* sNode)
 
 }
 
+/**
+ * Função de deleção de uma lista encadeada
+ * 
+ * Função responsável por deletar uma lista encadeada
+ * @param sNode ponteiro de um ponteiro de uma lista encadeada
+*/
 void deleteLinkedList(struct Node** sNode)
 {
    struct Node* ptrCurrent = *sNode;
@@ -702,6 +772,12 @@ void deleteLinkedList(struct Node** sNode)
    *sNode = nullptr;
 }
 
+/**
+ * Função de conversão de uma lista encadeada para uma árvore
+ * 
+ * Função responsável por converter uma lista encadeada em uma árvore
+ * @param sNode ponteiro de uma lista encadeada
+*/
 struct Node* linkedListToTree(struct Node* sNode)
 {
     struct Node* sTree = nullptr;
@@ -720,6 +796,12 @@ struct Node* linkedListToTree(struct Node* sNode)
     return sTree;
 }
 
+/**
+ * Função de print de uma lista encadeada
+ * 
+ * Função responsável por printar uma lista encadeada
+ * @param sNode ponteiro de uma lista encadeada
+*/
 void printLinkedList(struct Node* sNode)
 {
     while (sNode != nullptr)
@@ -734,6 +816,13 @@ void printLinkedList(struct Node* sNode)
     cout << " nullptr " << endl;
 }
 
+/**
+ * Função de contagem de nós em uma árvore
+ * 
+ * Função responsável por contar a quantidade de nós em uma árvore
+ * @param sNode ponteiro de uma árvore
+ * @return quantidade de nós na árvore
+*/
 int countNodes(struct Node* root)
 {
     if (root == nullptr)
@@ -744,6 +833,15 @@ int countNodes(struct Node* root)
     return (1 + countNodes(root -> ptrLeft) + countNodes(root -> ptrRight));
 }
 
+/**
+ * Função de verificação se uma árvore é completa
+ * 
+ * Função responsável por verificar se uma árvore é completa
+ * @param sNode ponteiro de uma árvore
+ * @param iIndex indíce de partida
+ * @param iNumberNodes quantidade de nós presentes na árvore
+ * @return valor booleano se uma árvore é completa ou não
+*/
 bool isCompleteTree(struct Node* root, int iIndex, int iNumberNodes) 
 {
     // árvore vazia é considerada completa
@@ -761,7 +859,13 @@ bool isCompleteTree(struct Node* root, int iIndex, int iNumberNodes)
             isCompleteTree(root->ptrRight, 2*iIndex + 2, iNumberNodes));
 }
 
-// função auxiliar para verificar se a árvore é perfeita (ou full)
+/**
+ * Função de verificação se uma árvore é Full
+ * 
+ * Função responsável por verificar se uma árvore é Full
+ * @param root ponteiro de uma árvore
+ * @return valor booleano se uma árvore é full ou não
+*/
 bool isFullTree(struct Node* root) 
 {
     if (root == nullptr)
@@ -789,6 +893,13 @@ struct QueueNode
     int iQueueSize;
 };
 
+/**
+ * Cria um nó de Queue
+ * 
+ * Cria um nó para um Queue de nós
+ * 
+ * @param sNode estrutura Node a ser armazenda no queue
+*/
 struct QueueNode* createQueueNode(struct Node* sNode) 
 {
     struct QueueNode* sQueueNewNode = (struct QueueNode*) malloc(sizeof(struct QueueNode));
@@ -799,6 +910,16 @@ struct QueueNode* createQueueNode(struct Node* sNode)
     return sQueueNewNode;
 }
 
+/**
+ * Função de colocar um nó em uma posição no Queue
+ * 
+ * Função responsável por colocar um nó dado em uma posição no Queue dado a posição do
+ * nó a frente e atrás
+ * 
+ * @param sQueueFront estrutura Node que está a frente do Node a ser armazenda no queue
+ * @param sQueueRear estrutura Node que está atrás do Node a ser armazenda no queue
+ * @param sNode estrutura Node a ser armazenda no queue
+*/
 void enqueue(struct QueueNode** sQueueFront, struct QueueNode** sQueueRear, struct Node* sNode) 
 {
     struct QueueNode* sQueueNewNode = createQueueNode(sNode);
@@ -817,6 +938,16 @@ void enqueue(struct QueueNode** sQueueFront, struct QueueNode** sQueueRear, stru
     (*sQueueRear) -> iQueueSize = (*sQueueRear) -> iQueueSize + 1;
 }
 
+/**
+ * Função de retirar um nó em uma posição no Queue
+ * 
+ * Função responsável por retirar um nó dado em uma posição no Queue dado a posição do
+ * nó a frente e atrás
+ * 
+ * @param sQueueFront estrutura Node que está a frente do Node a ser retirado no queue
+ * @param sQueueRear estrutura Node que está atrás do Node a ser retirado no queue
+ * @return estrutura Node a retirada do queue
+*/
 struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear) 
 {
     if (*sQueueFront == nullptr) 
@@ -837,11 +968,26 @@ struct Node* dequeue(struct QueueNode** sQueueFront, QueueNode** sQueueRear)
     return sNode;
 }
 
+/**
+ * Função de verificar se um Queue está vazio
+ * 
+ * Função responsável por verificar se um certo Queue está vazio
+ * 
+ * @param sQueueFront estrutura Node a frente a ser verificada
+ * @return situação do Queue, se está vazio ou não
+*/
 bool isQueueEmpty(struct QueueNode* sQueueFront) 
 {
     return sQueueFront == nullptr;
 }
 
+/**
+ * Função responsável pelo algoritmo Breadth First Search
+ * 
+ * Função responsável por utilizar o algoritmo BFS e exibir a árvore conforme o mesmo
+ * 
+ * @param root árvore a ser exibida 
+*/
 void breadthFirstSearch(struct Node* root) 
 {
     if (root == nullptr) 
@@ -877,6 +1023,14 @@ void breadthFirstSearch(struct Node* root)
     }
 }
 
+/**
+ * Função responsável por exibir a árvore
+ * 
+ * Função responsável por exibir a árvore no console
+ * 
+ * @param root árvore a ser exibida 
+ * @param iTab quantidade de espaçamento entre os galhos
+*/
 void displayTree(struct Node* root, int iTab) 
 {
     if (root == nullptr) 
@@ -884,7 +1038,7 @@ void displayTree(struct Node* root, int iTab)
         return;
     }
 
-    int iIdentation = 4;
+    int iIdentation = 2;
 
     iTab += iIdentation;
 
@@ -901,6 +1055,12 @@ void displayTree(struct Node* root, int iTab)
     displayTree(root -> ptrLeft, iTab);
 }
 
+/**
+ * Função de Driver Code
+ * 
+ * Função responsável por utilizar as principais funções do trabalho e exibir seus resultados.
+ * 
+*/
 void driverCode()
 {
     cout << "Seja bem-vindo ao nosso trabalho de Estrutura de Dados sobre Árvores Binárias " << endl;
