@@ -34,7 +34,8 @@ void printMenu()
             "____0000000________________________________________________________________________0000000_____\n"
             "___000000000______________________________________________________________________000000000____\n"
             "______| |____________________________________________________________________________| |_______\n" << endl;
-    cout << "01. Construir uma árvore binária de busca a partir de um arquivo texto\n"
+    cout << "00. Executar Driver Code\n"
+            "01. Construir uma árvore binária de busca a partir de um arquivo texto\n"
             "02. Construir uma árvore binária de busca a partir de dados digitados\n"
             "03. Verificar a altura da árvore\n"
             "04. Verificar o tamanho da árvore\n"
@@ -103,7 +104,14 @@ void menu() {
         timeStart = high_resolution_clock::now();
 
         switch (iOption) 
-        {
+        {   
+            case 0:
+                cout << "00. Executar Driver Code \n" << endl;
+
+                driverCode();
+
+                break;
+
             case 1:
                 cout << "01. Construir uma árvore binária de busca a partir de um arquivo texto\n" << endl;
                 cout << "Digite o nome do arquivo: ";
@@ -190,6 +198,8 @@ void menu() {
             case 10:
                 cout << "10. Exibir a árvore utilizando (BFS)\n" << endl;
                 breadthFirstSearch(root);
+                cout << endl;
+                cout << "Display Tree: " << endl;
                 displayTree(root, 4);
                 break;
 
@@ -228,6 +238,7 @@ void menu() {
                 shellSort(root);
                 root = linkedListToTree(root);
                 break;
+            
             case -1:
                 deleteTree(&root);
                 cout << "Tchau!" << endl;

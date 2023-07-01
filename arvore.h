@@ -20,8 +20,6 @@ struct Node* treeFromText(struct Node* root, string strPath);
 struct Node* treeFromPrompt(struct Node* root, int iSize);
 
 void traversePreOrder(struct Node*);
-void traverseInOrder(struct Node*);
-void traversePosOrder(struct Node*);
 void breadthFirstSearch(struct Node* root);
 void treeToLinkedList(struct Node*);
 void sortedInsert(struct Node**, struct Node*);
@@ -901,6 +899,145 @@ void displayTree(struct Node* root, int iTab)
     cout << root -> iPayload << endl;
 
     displayTree(root -> ptrLeft, iTab);
+}
+
+void driverCode()
+{
+    cout << "Seja bem-vindo ao nosso trabalho de Estrutura de Dados sobre Árvores Binárias " << endl;
+    cout << "Inicialmente, iniciamos uma árvore a partir de um arquivo txt: " << endl;
+
+    struct Node* rootTree1 = nullptr;
+    struct Node* rootTree2 = nullptr;
+    int iValue = 0;
+
+    rootTree1 = treeFromText(nullptr, "ex_1.txt");
+
+    cout << "A Árvore obtida é a seguinte: " << endl;
+
+    displayTree(rootTree1, 2);
+
+    cout << "Verificando a altura da árvore: " << endl;
+    cout << "Altura da arvore: " << treeHeight(rootTree1) << endl;
+    cout << "Verificando o tamanho da árvore: " << endl;
+    cout << "Tamanho da arvore: " << treeSize(rootTree1) << endl;
+
+    cout << "Agora insira um elemento novo na árvore: " << endl;
+    cout << "Digite o elemento: ";
+    cin >> iValue;
+
+    rootTree1 = insertNode(rootTree1, iValue);
+
+    cout << "\n Observe árvore após inclusão do elemento: " << endl;
+
+    displayTree(rootTree1, 2);
+
+    cout << "\n Agora delete um elemento da árvore: " << endl;
+    cout << "Digite o elemento: ";
+    cin >> iValue;
+
+    deleteNode(&rootTree1, rootTree1, iValue);
+    
+    cout << "\n Observe a árvore após a remoção do elemento: " << endl;
+
+    displayTree(rootTree1, 2);
+
+    cout << "\n Agora peça o endereço de memória de algum elemento" << endl;
+    cout << "Digite o elemento: ";
+    cin >> iValue;
+
+    struct Node* ptrTemp =  searchNode(rootTree1, iValue);
+
+    if (ptrTemp != nullptr)
+    { 
+        cout << "\nEndereço de " << ptrTemp -> iPayload  << ": " << ptrTemp;
+    }
+    else 
+    {
+        cout << "\nElemento não encontrado";
+    }
+
+    cout << "\n Agora crie uma nova árvore com a quantidade e os elementos que desejar: " << endl;
+
+    cout << "Digite o numero de elementos: ";
+    cin >> iValue;
+    cout << "\n<< ";
+
+    //deleteTree(&root);
+
+    rootTree2 = treeFromPrompt(rootTree2, iValue);
+
+    //cout << "Árvore criada: " << endl;
+    
+    displayTree(rootTree2, 2);
+
+    cout << "Verificando se a árvore criada por você é completa: " << endl;
+    int iNumberNodes = countNodes(rootTree2);
+    if (isCompleteTree(rootTree2, 0, iNumberNodes))
+        cout << "A arvore e completa." << endl;
+    else
+        cout << "A arvore nao e completa." << endl;
+
+    cout << "Verificando se a árvore criada por você é perfeita\n" << endl;
+    if (isFullTree(rootTree2))
+        cout << "A arvore e perfeita." << endl;
+    else
+        cout << "A arvore nao e perfeita." << endl;
+    
+    cout << "Exibindo a árvore utilizando (BFS)\n" << endl;
+    breadthFirstSearch(rootTree2);
+    cout << endl;
+
+    cout << "Agora será executado 4 algoritmos de ordenação: " << endl;
+    cout << "Primeira árvore a ser transformada em linked list e ordenada utilizando BubbleSort: " << endl;
+
+    displayTree(rootTree1, 2);
+
+    treeToLinkedList(rootTree1);
+    bubbleSort(&rootTree1);
+    rootTree1 = linkedListToTree(rootTree1);
+
+    displayTree(rootTree1, 2);
+
+    cout << "Segunda árvore utilizando InsertSort: " << endl;
+
+    displayTree(rootTree2, 2);
+
+    treeToLinkedList(rootTree2);
+    insertSort(&rootTree2);
+    rootTree2 = linkedListToTree(rootTree2);
+
+    displayTree(rootTree2, 2);
+
+    cout << "Terceira árvore utilizando SelectSort: " << endl;
+
+    struct Node* rootTree3 =  treeFromText(nullptr, "ex_2.txt");
+
+    displayTree(rootTree3, 2);
+
+    treeToLinkedList(rootTree3);
+    selectSort(rootTree3);
+    rootTree3 = linkedListToTree(rootTree3);
+
+    displayTree(rootTree3, 2);
+
+    cout << "Quarta árvore utilizando ShellSort: " << endl;
+
+    struct Node* rootTree4 =  treeFromText(nullptr, "novo.txt");
+
+    displayTree(rootTree4, 2);
+
+    treeToLinkedList(rootTree4);
+    shellSort(rootTree4);
+    rootTree4 = linkedListToTree(rootTree4);
+
+    displayTree(rootTree4, 2);
+
+    cout << "Agora é hora de dizer adeus, mas antes, iremos deletar todas as árvores feitas" << endl;
+
+    deleteTree(&rootTree1);
+    deleteTree(&rootTree2);
+    deleteTree(&rootTree3);
+    deleteTree(&rootTree4);
 }
 
 #endif //TRABALHO_DE_ED_ARVORE_H
